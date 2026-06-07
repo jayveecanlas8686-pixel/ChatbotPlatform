@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Analytics – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-robot"></i><span>ChatBot AI</span></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="chat-inbox.html"><i class="fas fa-comments"></i> Chat Inbox</a>
+      <a href="tickets.html"><i class="fas fa-ticket"></i> Tickets</a>
+      <a href="knowledge-base.html"><i class="fas fa-book-open"></i> Knowledge Base</a>
+      <div class="sidebar-section">Configure</div>
+      <a href="bot-builder.html"><i class="fas fa-robot"></i> Bot Builder</a>
+      <a href="analytics.html" class="active"><i class="fas fa-chart-bar"></i> Analytics</a>
+      <a href="integrations.html"><i class="fas fa-plug"></i> Integrations</a>
+      <div class="sidebar-section">Admin</div>
+      <a href="team.html"><i class="fas fa-users"></i> Team</a>
+      <a href="settings.html"><i class="fas fa-gear"></i> Settings</a>
+      <a href="billing.html"><i class="fas fa-credit-card"></i> Billing</a>
+      <a href="help-center.html"><i class="fas fa-circle-question"></i> Help Center</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" data-user-avatar>AJ</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Alex Johnson</div>
+          <div class="sidebar-user-role" data-user-role>Administrator</div>
+        </div>
+      </div>
+      <a href="#" data-logout style="display:flex;align-items:center;gap:.5rem;padding:.5rem .875rem;color:#475569;font-size:.8rem;border-radius:var(--radius)" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-header">
+      <div class="app-header-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <span class="page-title">Analytics</span>
+      </div>
+      <div class="app-header-right">
+        <select class="form-select" style="font-size:.8rem;padding:.375rem .75rem;width:auto">
+          <option>Last 7 Days</option>
+          <option>Last 30 Days</option>
+          <option>Last 90 Days</option>
+        </select>
+        <button class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Export</button>
+      </div>
+    </header>
+
+    <div class="app-content">
+      <!-- Summary Stats -->
+      <div class="stats-grid" style="margin-bottom:1.5rem">
+        <div class="stat-card">
+          <div class="stat-card-header"><div><div class="stat-value" id="anTotalConvs">—</div><div class="stat-label">Total Conversations</div></div><div class="stat-icon purple"><i class="fas fa-comments"></i></div></div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> +18% vs last period</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header"><div><div class="stat-value" id="anResolutionRate">—</div><div class="stat-label">Resolution Rate</div></div><div class="stat-icon green"><i class="fas fa-check-circle"></i></div></div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> +5% vs last period</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header"><div><div class="stat-value" id="anAvgTime">—</div><div class="stat-label">Avg Response Time</div></div><div class="stat-icon blue"><i class="fas fa-clock"></i></div></div>
+          <div class="stat-change down"><i class="fas fa-arrow-down"></i> -0.3m improvement</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header"><div><div class="stat-value" id="anCsat">—</div><div class="stat-label">CSAT Score</div></div><div class="stat-icon yellow"><i class="fas fa-star"></i></div></div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> +0.2 vs last period</div>
+        </div>
+      </div>
+
+      <!-- Second row stats -->
+      <div class="grid-2" style="margin-bottom:1.5rem">
+        <div class="stat-card">
+          <div class="stat-card-header"><div><div class="stat-value" id="anTodayConvs">—</div><div class="stat-label">Conversations Today</div></div><div class="stat-icon purple"><i class="fas fa-calendar-day"></i></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header"><div><div class="stat-value" id="anBotResolved">—</div><div class="stat-label">Resolved by AI Bot</div></div><div class="stat-icon green"><i class="fas fa-robot"></i></div></div>
+          <div class="stat-change up"><i class="fas fa-robot"></i> 72% AI automation rate</div>
+        </div>
+      </div>
+
+      <!-- Volume Chart -->
+      <div class="card" style="margin-bottom:1.5rem">
+        <div class="card-header"><h3>Conversation Volume</h3><span class="badge badge-primary">7-day view</span></div>
+        <div class="card-body" id="volumeChart"></div>
+      </div>
+
+      <!-- Middle row -->
+      <div class="grid-2" style="margin-bottom:1.5rem">
+        <!-- Top Questions -->
+        <div class="card">
+          <div class="card-header"><h3>Top Questions Asked</h3><span class="text-xs text-muted">Bot uses these from KB</span></div>
+          <div class="card-body" id="topQuestions"></div>
+        </div>
+
+        <!-- CSAT Chart -->
+        <div class="card">
+          <div class="card-header"><h3>Customer Satisfaction (CSAT)</h3></div>
+          <div class="card-body" id="csatChart"></div>
+        </div>
+      </div>
+
+      <!-- Bottom row -->
+      <div class="grid-2">
+        <!-- Channel Distribution -->
+        <div class="card">
+          <div class="card-header"><h3>Conversations by Channel</h3></div>
+          <div class="card-body" id="channelBars"></div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="card">
+          <div class="card-header"><h3>Topics by Category</h3></div>
+          <div class="card-body" id="categoryChart"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/analytics.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => { App.init(); Analytics.init(); });</script>
+</body>
+</html>

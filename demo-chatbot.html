@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Live Chatbot Demo – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="demo-page">
+  <div class="demo-page-header">
+    <a href="index.html" class="logo"><i class="fas fa-robot"></i> ChatBot AI</a>
+    <div style="display:flex;gap:.75rem">
+      <a href="login.html" class="btn btn-outline-light btn-sm">Sign In</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Get Started Free</a>
+    </div>
+  </div>
+
+  <div class="demo-main">
+    <div class="demo-info fade-in">
+      <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:.375rem 1rem;border-radius:9999px;font-size:.8125rem;display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem">
+        <span style="width:8px;height:8px;border-radius:50%;background:#10b981;flex-shrink:0"></span>
+        Live interactive demo
+      </div>
+      <h1>See the AI Chatbot in Action</h1>
+      <p>Experience the power of ChatBot AI firsthand. Ask anything — the bot uses our demo knowledge base to answer questions intelligently.</p>
+      <ul>
+        <li><i class="fas fa-check"></i> Powered by real FAQ knowledge base</li>
+        <li><i class="fas fa-check"></i> Typing animation & smart responses</li>
+        <li><i class="fas fa-check"></i> Create support tickets from chat</li>
+        <li><i class="fas fa-check"></i> Escalate to human agent</li>
+        <li><i class="fas fa-check"></i> Chat history saved locally</li>
+      </ul>
+
+      <div style="margin-top:2rem;padding:1.25rem;background:rgba(255,255,255,.08);border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,.12)">
+        <div style="font-weight:700;margin-bottom:.75rem;font-size:.9375rem">💡 Try asking the bot:</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <div class="suggestion-chip" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2);cursor:pointer" onclick="document.getElementById('demoInput').value=this.textContent;document.getElementById('demoInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))">What are your pricing plans?</div>
+          <div class="suggestion-chip" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2);cursor:pointer" onclick="document.getElementById('demoInput').value=this.textContent;document.getElementById('demoInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))">How do I reset my password?</div>
+          <div class="suggestion-chip" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2);cursor:pointer" onclick="document.getElementById('demoInput').value=this.textContent;document.getElementById('demoInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))">Can I integrate with Shopify?</div>
+          <div class="suggestion-chip" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2);cursor:pointer" onclick="document.getElementById('demoInput').value=this.textContent;document.getElementById('demoInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))">Talk to a human agent</div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;display:flex;gap:.75rem;flex-wrap:wrap">
+        <a href="register.html" class="btn btn-primary btn-lg"><i class="fas fa-rocket"></i> Start Free Trial</a>
+        <a href="features.html" class="btn btn-outline-light btn-lg"><i class="fas fa-list"></i> See All Features</a>
+      </div>
+    </div>
+
+    <!-- Chatbot (open by default) -->
+    <div class="demo-chatbot">
+      <div class="chatbot-window" id="demoChatWindow">
+        <div class="chatbot-header" id="demoChatHeader">
+          <div class="chatbot-header-info">
+            <div class="chatbot-bot-avatar" id="demoBotAvatar">🤖</div>
+            <div>
+              <div class="chatbot-bot-name" id="demoBotName">Aria</div>
+              <div class="chatbot-status">🟢 Online · Usually replies instantly</div>
+            </div>
+          </div>
+          <div style="font-size:.75rem;opacity:.85">ChatBot AI Demo</div>
+        </div>
+        <div class="chatbot-messages" id="demoChatMessages"></div>
+        <div class="chatbot-suggestions" id="demoChatSugs"></div>
+        <div class="chatbot-actions">
+          <button class="chatbot-action-btn" onclick="DemoChat.escalate()">👤 Talk to Human</button>
+          <button class="chatbot-action-btn" onclick="DemoChat.createTicket()">🎫 Create Ticket</button>
+          <button class="chatbot-action-btn" onclick="DemoChat.clear()">🗑️ Clear Chat</button>
+        </div>
+        <div class="chatbot-input">
+          <div class="chatbot-input-row">
+            <input type="text" id="demoInput" placeholder="Type a message..." autocomplete="off" />
+            <button class="chatbot-send" onclick="DemoChat.send()"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Strip -->
+  <div style="background:rgba(0,0,0,.3);padding:2rem 1.5rem;margin-top:auto">
+    <div style="max-width:900px;margin:0 auto;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap">
+      <div style="text-align:center;color:rgba(255,255,255,.8)"><div style="font-size:1.5rem;margin-bottom:.375rem">🤖</div><div style="font-size:.8rem">AI-Powered</div></div>
+      <div style="text-align:center;color:rgba(255,255,255,.8)"><div style="font-size:1.5rem;margin-bottom:.375rem">📚</div><div style="font-size:.8rem">Knowledge Base</div></div>
+      <div style="text-align:center;color:rgba(255,255,255,.8)"><div style="font-size:1.5rem;margin-bottom:.375rem">🎫</div><div style="font-size:.8rem">Ticket Creation</div></div>
+      <div style="text-align:center;color:rgba(255,255,255,.8)"><div style="font-size:1.5rem;margin-bottom:.375rem">👤</div><div style="font-size:.8rem">Human Handoff</div></div>
+      <div style="text-align:center;color:rgba(255,255,255,.8)"><div style="font-size:1.5rem;margin-bottom:.375rem">📊</div><div style="font-size:.8rem">Analytics</div></div>
+      <div style="text-align:center;color:rgba(255,255,255,.8)"><div style="font-size:1.5rem;margin-bottom:.375rem">🔌</div><div style="font-size:.8rem">Integrations</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/chatbot.js"></script>
+<script>
+// Demo-specific chatbot (standalone, always open)
+const DemoChat = {
+  messages: [],
+  sessionId: 'demo_' + Date.now(),
+  escalated: false,
+
+  init() {
+    CB.initDemo();
+    const s = Chatbot.getSettings ? Chatbot.getSettings() : (CB.get(CB.KEYS.botSettings) || CB.DEMO.botSettings);
+    document.getElementById('demoBotName').textContent = s.name || 'Aria';
+    document.getElementById('demoBotAvatar').textContent = s.avatarEmoji || '🤖';
+    document.getElementById('demoChatHeader').style.background = `linear-gradient(135deg, ${s.color || '#6366f1'}, #8b5cf6)`;
+    this.renderSuggestions(s);
+    this.addBot(s.greeting || 'Hi! How can I help you today? 😊');
+    document.getElementById('demoInput').addEventListener('keydown', e => { if (e.key === 'Enter') this.send(); });
+  },
+
+  getSettings() { return CB.get(CB.KEYS.botSettings) || CB.DEMO.botSettings; },
+
+  send() {
+    const input = document.getElementById('demoInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    this.addUser(text);
+    this.hideSugs();
+    this.showTyping();
+    const delay = 900 + Math.random() * 700;
+    setTimeout(() => { this.hideTyping(); this.addBot(this.respond(text)); }, delay);
+  },
+
+  respond(text) {
+    const s = this.getSettings();
+    const lower = text.toLowerCase();
+    if (lower.match(/\b(hello|hi|hey)\b/)) return 'Hi there! 😊 How can I help you today?';
+    if (lower.match(/\b(thank|thanks)\b/)) return 'You\'re welcome! Anything else I can help with?';
+    if (lower.match(/\b(bye|goodbye)\b/)) return 'Goodbye! Have a great day! 👋';
+
+    // Check flows
+    for (const flow of (s.flows || [])) {
+      const patterns = flow.trigger.split('|').map(p => p.trim());
+      if (patterns.some(p => lower.includes(p))) {
+        if (lower.match(/human|agent|talk/)) this.escalated = true;
+        return flow.response;
+      }
+    }
+
+    // Check KB
+    const articles = (CB.get(CB.KEYS.articles) || []).filter(a => a.status === 'published');
+    let best = null, bestScore = 0;
+    const words = lower.split(/\s+/).filter(w => w.length > 2);
+    for (const a of articles) {
+      const hay = (a.title + ' ' + a.content + ' ' + (a.tags||[]).join(' ')).toLowerCase();
+      const score = words.filter(w => hay.includes(w)).length;
+      if (score > bestScore) { bestScore = score; best = a; }
+    }
+    if (best && bestScore > 1) {
+      const excerpt = best.content.slice(0, 220) + (best.content.length > 220 ? '...' : '');
+      return `📚 From our knowledge base — <strong>${best.title}</strong>:<br><br>${excerpt}`;
+    }
+
+    return s.fallback || 'I\'m not quite sure about that. Try rephrasing, or type "talk to agent" for human support.';
+  },
+
+  addBot(html) {
+    const s = this.getSettings();
+    const container = document.getElementById('demoChatMessages');
+    const el = document.createElement('div');
+    el.className = 'bot-msg';
+    el.innerHTML = `<div class="bot-avatar-sm">${s.avatarEmoji||'🤖'}</div><div><div class="bot-bubble">${html}</div><div class="msg-time">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</div></div>`;
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+  },
+
+  addUser(text) {
+    const container = document.getElementById('demoChatMessages');
+    const el = document.createElement('div');
+    el.className = 'user-msg';
+    el.innerHTML = `<div><div class="user-bubble">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div><div class="msg-time" style="text-align:right">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</div></div>`;
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+  },
+
+  showTyping() {
+    const s = this.getSettings();
+    const container = document.getElementById('demoChatMessages');
+    const el = document.createElement('div');
+    el.className = 'bot-msg';
+    el.id = 'demoTyping';
+    el.innerHTML = `<div class="bot-avatar-sm">${s.avatarEmoji||'🤖'}</div><div class="bot-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+  },
+
+  hideTyping() { document.getElementById('demoTyping')?.remove(); },
+
+  hideSugs() { const el = document.getElementById('demoChatSugs'); if (el) el.innerHTML = ''; },
+
+  renderSuggestions(s) {
+    const el = document.getElementById('demoChatSugs');
+    if (!el) return;
+    el.innerHTML = (s.suggestions || []).map(q =>
+      `<button class="suggestion-chip" onclick="document.getElementById('demoInput').value='${q.replace(/'/g,'')}';DemoChat.send()">${q}</button>`
+    ).join('');
+  },
+
+  escalate() {
+    this.addBot('Connecting you with a human agent... 👤<br><br>Please hold on. An agent will join this conversation shortly. Average wait time: <strong>~2 minutes</strong>.');
+    if (typeof App !== 'undefined') App.toast('Escalated to human agent', 'info');
+  },
+
+  createTicket() {
+    const subject = prompt('Briefly describe your issue for the ticket:');
+    if (!subject) return;
+    const tickets = CB.get(CB.KEYS.tickets) || [];
+    const lastNo = tickets.length ? parseInt(tickets.sort((a,b)=>a.ticketNo.localeCompare(b.ticketNo)).at(-1).ticketNo.split('-')[1]) : 0;
+    const t = { id: 'demo_' + Date.now(), ticketNo: `TKT-${String(lastNo+1).padStart(3,'0')}`, subject, customerName: 'Demo Visitor', customerEmail: 'demo@visitor.com', status: 'open', priority: 'medium', category: 'General', assignedTo: null, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), description: 'Created from demo chatbot', conversationId: null, notes: [] };
+    tickets.push(t);
+    CB.set(CB.KEYS.tickets, tickets);
+    this.addBot(`✅ Ticket <strong>${t.ticketNo}</strong> created! Our team will get back to you within 24 hours.<br><br><small>View it in the <a href="tickets.html" style="color:var(--primary-light)">Tickets Dashboard</a> (requires login).</small>`);
+  },
+
+  clear() {
+    const container = document.getElementById('demoChatMessages');
+    if (container) container.innerHTML = '';
+    const s = this.getSettings();
+    this.renderSuggestions(s);
+    this.addBot(s.greeting || 'Hi! How can I help you today? 😊');
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => DemoChat.init());
+</script>
+</body>
+</html>

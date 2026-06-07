@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Knowledge Base – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-robot"></i><span>ChatBot AI</span></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="chat-inbox.html"><i class="fas fa-comments"></i> Chat Inbox</a>
+      <a href="tickets.html"><i class="fas fa-ticket"></i> Tickets</a>
+      <a href="knowledge-base.html" class="active"><i class="fas fa-book-open"></i> Knowledge Base</a>
+      <div class="sidebar-section">Configure</div>
+      <a href="bot-builder.html"><i class="fas fa-robot"></i> Bot Builder</a>
+      <a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a>
+      <a href="integrations.html"><i class="fas fa-plug"></i> Integrations</a>
+      <div class="sidebar-section">Admin</div>
+      <a href="team.html"><i class="fas fa-users"></i> Team</a>
+      <a href="settings.html"><i class="fas fa-gear"></i> Settings</a>
+      <a href="billing.html"><i class="fas fa-credit-card"></i> Billing</a>
+      <a href="help-center.html"><i class="fas fa-circle-question"></i> Help Center</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" data-user-avatar>AJ</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Alex Johnson</div>
+          <div class="sidebar-user-role" data-user-role>Administrator</div>
+        </div>
+      </div>
+      <a href="#" data-logout style="display:flex;align-items:center;gap:.5rem;padding:.5rem .875rem;color:#475569;font-size:.8rem;border-radius:var(--radius)" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-header">
+      <div class="app-header-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <span class="page-title">Knowledge Base</span>
+      </div>
+      <div class="app-header-right">
+        <button class="btn btn-primary btn-sm" onclick="KB.openCreate()"><i class="fas fa-plus"></i> New Article</button>
+      </div>
+    </header>
+
+    <div class="app-content">
+      <!-- Search Bar -->
+      <div class="card" style="margin-bottom:1.25rem;padding:1.25rem">
+        <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+          <div style="position:relative;flex:1;max-width:440px">
+            <i class="fas fa-search" style="position:absolute;left:.875rem;top:50%;transform:translateY(-50%);color:var(--text-muted)"></i>
+            <input type="text" id="kbSearch" class="form-control" placeholder="Search articles..." style="padding-left:2.5rem" />
+          </div>
+          <select class="form-select" id="kbCategory" style="max-width:200px">
+            <option value="">All Categories</option>
+            <option value="Account">Account</option>
+            <option value="Billing">Billing</option>
+            <option value="Setup">Setup</option>
+            <option value="Integration">Integration</option>
+            <option value="Analytics">Analytics</option>
+            <option value="Support">Support</option>
+            <option value="General">General</option>
+          </select>
+          <select class="form-select" id="kbStatus" style="max-width:160px">
+            <option value="">All Status</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid-4" style="margin-bottom:1.25rem">
+        <div class="stat-card"><div class="stat-card-header"><div><div class="stat-value" id="kbTotal">—</div><div class="stat-label">Total Articles</div></div><div class="stat-icon purple"><i class="fas fa-file-alt"></i></div></div></div>
+        <div class="stat-card"><div class="stat-card-header"><div><div class="stat-value" id="kbPublished">—</div><div class="stat-label">Published</div></div><div class="stat-icon green"><i class="fas fa-check-circle"></i></div></div></div>
+        <div class="stat-card"><div class="stat-card-header"><div><div class="stat-value" id="kbDraft">—</div><div class="stat-label">Drafts</div></div><div class="stat-icon yellow"><i class="fas fa-pen"></i></div></div></div>
+        <div class="stat-card"><div class="stat-card-header"><div><div class="stat-value" id="kbViews">—</div><div class="stat-label">Total Views</div></div><div class="stat-icon blue"><i class="fas fa-eye"></i></div></div></div>
+      </div>
+
+      <!-- Article List -->
+      <div class="card">
+        <div class="card-header"><h3>Articles</h3><span class="text-sm text-muted" id="kbCount"></span></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Views</th>
+                <th>Updated</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="articleList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Article Modal -->
+<div class="modal-overlay" id="articleModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 id="articleModalTitle">New Article</h3>
+      <button class="modal-close"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input type="text" class="form-control" id="artTitle" placeholder="e.g., How to reset your password" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="artCategory">
+            <option value="Account">Account</option>
+            <option value="Billing">Billing</option>
+            <option value="Setup">Setup</option>
+            <option value="Integration">Integration</option>
+            <option value="Analytics">Analytics</option>
+            <option value="Support">Support</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="artStatus">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Content *</label>
+        <textarea class="form-control" id="artContent" placeholder="Write the article content here..." style="min-height:200px"></textarea>
+        <div class="form-hint">This content is used by the AI chatbot to answer customer questions.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tags (comma separated)</label>
+        <input type="text" class="form-control" id="artTags" placeholder="e.g., password, login, account" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary modal-close">Cancel</button>
+      <button class="btn btn-primary" id="saveArticleBtn">Save Article</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Article Modal -->
+<div class="modal-overlay" id="viewArticleModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 id="viewArticleTitle">Article</h3>
+      <button class="modal-close"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="viewArticleContent"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary modal-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+const KB = {
+  state: { editingId: null },
+
+  init() {
+    if (!Auth.guard()) return;
+    App.init();
+    this.render();
+    this.bindEvents();
+    document.getElementById('saveArticleBtn').addEventListener('click', () => this.save());
+  },
+
+  getArticles() { return CB.get(CB.KEYS.articles) || []; },
+  save_(a) { CB.set(CB.KEYS.articles, a); },
+
+  filtered() {
+    const search = document.getElementById('kbSearch')?.value?.toLowerCase();
+    const cat = document.getElementById('kbCategory')?.value;
+    const status = document.getElementById('kbStatus')?.value;
+    return this.getArticles().filter(a => {
+      if (cat && a.category !== cat) return false;
+      if (status && a.status !== status) return false;
+      if (search && !a.title.toLowerCase().includes(search) && !a.content.toLowerCase().includes(search)) return false;
+      return true;
+    });
+  },
+
+  render() {
+    const arts = this.filtered();
+    const all = this.getArticles();
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('kbTotal', all.length);
+    set('kbPublished', all.filter(a => a.status === 'published').length);
+    set('kbDraft', all.filter(a => a.status === 'draft').length);
+    set('kbViews', all.reduce((s, a) => s + (a.views || 0), 0).toLocaleString());
+    set('kbCount', arts.length + ' articles');
+
+    const el = document.getElementById('articleList');
+    if (!el) return;
+    if (!arts.length) {
+      el.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">No articles found.</td></tr>';
+      return;
+    }
+    el.innerHTML = arts.map(a => `
+      <tr>
+        <td>
+          <div class="font-semibold text-sm">${App.escHtml(a.title)}</div>
+          <div class="text-xs text-muted">${(a.tags||[]).map(t=>`<span style="background:var(--border);padding:.1rem .4rem;border-radius:3px;margin-right:.25rem">${App.escHtml(t)}</span>`).join('')}</div>
+        </td>
+        <td><span class="badge badge-primary">${App.escHtml(a.category)}</span></td>
+        <td>${a.status === 'published' ? '<span class="badge badge-success">Published</span>' : '<span class="badge badge-neutral">Draft</span>'}</td>
+        <td class="text-sm">${(a.views||0).toLocaleString()}</td>
+        <td class="text-sm text-muted">${App.formatDate(a.updatedAt)}</td>
+        <td>
+          <div class="table-actions">
+            <button class="btn btn-sm btn-secondary" onclick="KB.view('${a.id}')"><i class="fas fa-eye"></i></button>
+            <button class="btn btn-sm btn-outline" onclick="KB.openEdit('${a.id}')"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-sm ${a.status==='published'?'btn-warning':'btn-success'}" onclick="KB.toggleStatus('${a.id}')" title="${a.status==='published'?'Unpublish':'Publish'}">
+              <i class="fas ${a.status==='published'?'fa-eye-slash':'fa-globe'}"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="KB.delete_('${a.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`).join('');
+  },
+
+  openCreate() {
+    this.state.editingId = null;
+    document.getElementById('articleModalTitle').textContent = 'New Article';
+    document.getElementById('artTitle').value = '';
+    document.getElementById('artContent').value = '';
+    document.getElementById('artTags').value = '';
+    document.getElementById('artCategory').value = 'General';
+    document.getElementById('artStatus').value = 'published';
+    App.openModal('articleModal');
+  },
+
+  openEdit(id) {
+    const a = this.getArticles().find(x => x.id === id);
+    if (!a) return;
+    this.state.editingId = id;
+    document.getElementById('articleModalTitle').textContent = 'Edit Article';
+    document.getElementById('artTitle').value = a.title;
+    document.getElementById('artContent').value = a.content;
+    document.getElementById('artTags').value = (a.tags || []).join(', ');
+    document.getElementById('artCategory').value = a.category;
+    document.getElementById('artStatus').value = a.status;
+    App.openModal('articleModal');
+  },
+
+  view(id) {
+    const a = this.getArticles().find(x => x.id === id);
+    if (!a) return;
+    document.getElementById('viewArticleTitle').textContent = a.title;
+    document.getElementById('viewArticleContent').innerHTML = `
+      <div style="margin-bottom:1rem;display:flex;gap:.75rem;flex-wrap:wrap">
+        <span class="badge badge-primary">${App.escHtml(a.category)}</span>
+        ${a.status==='published'?'<span class="badge badge-success">Published</span>':'<span class="badge badge-neutral">Draft</span>'}
+        <span class="text-xs text-muted">👁 ${(a.views||0)} views</span>
+        <span class="text-xs text-muted">Updated: ${App.formatDate(a.updatedAt)}</span>
+      </div>
+      <div style="font-size:.9375rem;line-height:1.8;white-space:pre-wrap;color:var(--text)">${App.escHtml(a.content)}</div>
+      ${(a.tags||[]).length ? `<div style="margin-top:1.25rem">${(a.tags||[]).map(t=>`<span style="background:var(--border);padding:.2rem .6rem;border-radius:9999px;font-size:.75rem;margin-right:.375rem">${App.escHtml(t)}</span>`).join('')}</div>` : ''}`;
+    const arts = this.getArticles();
+    const idx = arts.findIndex(x => x.id === id);
+    if (idx >= 0) { arts[idx].views = (arts[idx].views || 0) + 1; this.save_(arts); }
+    App.openModal('viewArticleModal');
+  },
+
+  save() {
+    const title = document.getElementById('artTitle').value.trim();
+    const content = document.getElementById('artContent').value.trim();
+    if (!title || !content) { App.toast('Title and content are required', 'error'); return; }
+    const arts = this.getArticles();
+    const tags = document.getElementById('artTags').value.split(',').map(t => t.trim()).filter(Boolean);
+    if (this.state.editingId) {
+      const idx = arts.findIndex(a => a.id === this.state.editingId);
+      if (idx >= 0) {
+        arts[idx] = { ...arts[idx], title, content, tags, category: document.getElementById('artCategory').value, status: document.getElementById('artStatus').value, updatedAt: new Date().toISOString().split('T')[0] };
+        App.toast('Article updated!', 'success');
+      }
+    } else {
+      arts.push({ id: App.generateId('a'), title, content, tags, category: document.getElementById('artCategory').value, status: document.getElementById('artStatus').value, views: 0, helpful: 0, createdAt: new Date().toISOString().split('T')[0], updatedAt: new Date().toISOString().split('T')[0] });
+      App.toast('Article created!', 'success');
+    }
+    this.save_(arts);
+    App.closeModal('articleModal');
+    this.render();
+  },
+
+  toggleStatus(id) {
+    const arts = this.getArticles();
+    const idx = arts.findIndex(a => a.id === id);
+    if (idx >= 0) {
+      arts[idx].status = arts[idx].status === 'published' ? 'draft' : 'published';
+      this.save_(arts);
+      App.toast(arts[idx].status === 'published' ? 'Article published!' : 'Article unpublished', 'success');
+      this.render();
+    }
+  },
+
+  delete_(id) {
+    App.confirm('Delete this article? The chatbot will no longer use it.', () => {
+      const arts = this.getArticles().filter(a => a.id !== id);
+      this.save_(arts);
+      App.toast('Article deleted', 'success');
+      this.render();
+    });
+  },
+
+  bindEvents() {
+    document.getElementById('kbSearch')?.addEventListener('input', () => this.render());
+    document.getElementById('kbCategory')?.addEventListener('change', () => this.render());
+    document.getElementById('kbStatus')?.addEventListener('change', () => this.render());
+  }
+};
+document.addEventListener('DOMContentLoaded', () => KB.init());
+</script>
+</body>
+</html>

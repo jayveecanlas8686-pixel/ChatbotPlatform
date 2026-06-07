@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bot Builder – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-robot"></i><span>ChatBot AI</span></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="chat-inbox.html"><i class="fas fa-comments"></i> Chat Inbox</a>
+      <a href="tickets.html"><i class="fas fa-ticket"></i> Tickets</a>
+      <a href="knowledge-base.html"><i class="fas fa-book-open"></i> Knowledge Base</a>
+      <div class="sidebar-section">Configure</div>
+      <a href="bot-builder.html" class="active"><i class="fas fa-robot"></i> Bot Builder</a>
+      <a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a>
+      <a href="integrations.html"><i class="fas fa-plug"></i> Integrations</a>
+      <div class="sidebar-section">Admin</div>
+      <a href="team.html"><i class="fas fa-users"></i> Team</a>
+      <a href="settings.html"><i class="fas fa-gear"></i> Settings</a>
+      <a href="billing.html"><i class="fas fa-credit-card"></i> Billing</a>
+      <a href="help-center.html"><i class="fas fa-circle-question"></i> Help Center</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" data-user-avatar>AJ</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Alex Johnson</div>
+          <div class="sidebar-user-role" data-user-role>Administrator</div>
+        </div>
+      </div>
+      <a href="#" data-logout style="display:flex;align-items:center;gap:.5rem;padding:.5rem .875rem;color:#475569;font-size:.8rem;border-radius:var(--radius)" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-header">
+      <div class="app-header-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <span class="page-title">Bot Builder</span>
+      </div>
+      <div class="app-header-right">
+        <button class="btn btn-secondary btn-sm" id="previewBot"><i class="fas fa-eye"></i> Preview</button>
+        <button class="btn btn-primary btn-sm" id="saveBot"><i class="fas fa-save"></i> Save Changes</button>
+      </div>
+    </header>
+
+    <div class="app-content">
+      <div class="bot-builder-layout">
+        <!-- Config Panel -->
+        <div>
+          <!-- Bot Identity -->
+          <div class="card" style="margin-bottom:1.25rem">
+            <div class="card-header"><h3><i class="fas fa-id-card" style="color:var(--primary)"></i> Bot Identity</h3></div>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Bot Name</label>
+                  <input type="text" class="form-control" id="botName" placeholder="e.g., Aria" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Avatar Emoji</label>
+                  <select class="form-select" id="avatarEmoji">
+                    <option value="🤖">🤖 Robot</option>
+                    <option value="🧠">🧠 Brain</option>
+                    <option value="💬">💬 Chat</option>
+                    <option value="⭐">⭐ Star</option>
+                    <option value="🦋">🦋 Butterfly</option>
+                    <option value="🚀">🚀 Rocket</option>
+                    <option value="💡">💡 Idea</option>
+                    <option value="🎯">🎯 Target</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Widget Color</label>
+                <div class="color-swatch-group">
+                  <div class="color-swatch" data-color="#6366f1" style="background:#6366f1"></div>
+                  <div class="color-swatch" data-color="#8b5cf6" style="background:#8b5cf6"></div>
+                  <div class="color-swatch" data-color="#10b981" style="background:#10b981"></div>
+                  <div class="color-swatch" data-color="#f59e0b" style="background:#f59e0b"></div>
+                  <div class="color-swatch" data-color="#3b82f6" style="background:#3b82f6"></div>
+                  <div class="color-swatch" data-color="#ef4444" style="background:#ef4444"></div>
+                  <div class="color-swatch" data-color="#ec4899" style="background:#ec4899"></div>
+                  <div class="color-swatch" data-color="#0f172a" style="background:#0f172a"></div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Greeting Message</label>
+                <textarea class="form-control" id="botGreeting" placeholder="Hi there! How can I help you today?" style="min-height:80px"></textarea>
+                <div class="form-hint">First message customers see when they open the chat.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Fallback Response</label>
+                <textarea class="form-control" id="botFallback" placeholder="I'm not sure about that..." style="min-height:80px"></textarea>
+                <div class="form-hint">Response when the bot doesn't understand a question.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Offline Message</label>
+                <textarea class="form-control" id="botOffline" style="min-height:60px"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Behavior -->
+          <div class="card" style="margin-bottom:1.25rem">
+            <div class="card-header"><h3><i class="fas fa-sliders" style="color:var(--primary)"></i> Behavior Settings</h3></div>
+            <div class="card-body">
+              <div class="form-check mb-2">
+                <input type="checkbox" id="collectEmail" />
+                <label for="collectEmail">Ask for email address at the start of conversation</label>
+              </div>
+              <div class="form-check mb-2">
+                <input type="checkbox" id="autoGreet" />
+                <label for="autoGreet">Automatically send greeting when chat opens</label>
+              </div>
+              <div class="form-check mb-2">
+                <input type="checkbox" id="showPoweredBy" />
+                <label for="showPoweredBy">Show "Powered by ChatBot AI" in widget</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Suggested Questions -->
+          <div class="card" style="margin-bottom:1.25rem">
+            <div class="card-header"><h3><i class="fas fa-comment-dots" style="color:var(--primary)"></i> Quick Reply Suggestions</h3></div>
+            <div class="card-body">
+              <div class="form-hint mb-2">These appear as clickable chips when the chat starts.</div>
+              <div id="suggestionList" style="margin-bottom:.875rem"></div>
+              <div style="display:flex;gap:.5rem">
+                <input type="text" class="form-control" id="newSuggestion" placeholder="e.g., What are your pricing plans?" style="flex:1" />
+                <button class="btn btn-primary btn-sm" id="addSuggestionBtn"><i class="fas fa-plus"></i> Add</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conversation Flows -->
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-sitemap" style="color:var(--primary)"></i> Conversation Flows</h3></div>
+            <div class="card-body">
+              <div class="form-hint mb-2">Define keyword triggers and the bot's response for specific topics.</div>
+              <div id="flowList" style="margin-bottom:1rem"></div>
+              <div class="card" style="padding:1rem;background:var(--bg)">
+                <div class="text-sm font-semibold mb-2">Add New Flow</div>
+                <div class="form-group">
+                  <label class="form-label">Trigger Keywords (separate with |)</label>
+                  <input type="text" class="form-control" id="newFlowTrigger" placeholder="e.g., refund|money back|cancel" style="font-size:.8rem" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Bot Response</label>
+                  <textarea class="form-control" id="newFlowResponse" style="min-height:60px;font-size:.8rem" placeholder="What the bot should say..."></textarea>
+                </div>
+                <button class="btn btn-primary btn-sm" id="addFlowBtn"><i class="fas fa-plus"></i> Add Flow</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="bot-preview-panel" id="previewPanel">
+          <div class="card" style="overflow:hidden">
+            <div class="card-header"><h3>Live Preview</h3><span class="badge badge-success">Real-time</span></div>
+            <div style="background:#f8fafc;padding:1rem">
+              <!-- Mini Chatbot Preview -->
+              <div style="border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid var(--border)">
+                <div id="previewHeader" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:.875rem 1rem;display:flex;align-items:center;gap:.75rem">
+                  <div class="preview-bot-avatar" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.125rem">🤖</div>
+                  <div>
+                    <div id="previewBotName" style="font-weight:700;font-size:.9375rem">Aria</div>
+                    <div style="font-size:.7rem;opacity:.85">🟢 Online</div>
+                  </div>
+                </div>
+                <div style="background:#f8fafc;padding:1rem;min-height:180px">
+                  <div style="display:flex;gap:.5rem;margin-bottom:.875rem">
+                    <div class="preview-avatar-sm" style="width:28px;height:28px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">🤖</div>
+                    <div style="background:#fff;border:1px solid var(--border);border-radius:.25rem 1rem 1rem 1rem;padding:.625rem .875rem;font-size:.8125rem;line-height:1.5" id="previewGreeting">Hi there! 👋 I'm Aria, your AI assistant. How can I help you today?</div>
+                  </div>
+                  <div style="display:flex;gap:.5rem;margin-bottom:.875rem;justify-content:flex-end">
+                    <div style="background:var(--primary);color:#fff;border-radius:1rem .25rem 1rem 1rem;padding:.625rem .875rem;font-size:.8125rem">What are your pricing plans?</div>
+                  </div>
+                  <div style="display:flex;gap:.5rem">
+                    <div class="preview-avatar-sm" style="width:28px;height:28px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">🤖</div>
+                    <div style="background:#fff;border:1px solid var(--border);border-radius:.25rem 1rem 1rem 1rem;padding:.625rem .875rem;font-size:.8125rem;line-height:1.5">We offer Starter (Free), Professional ($49/mo), and Enterprise ($149/mo).</div>
+                  </div>
+                </div>
+                <div style="background:#fff;padding:.625rem .875rem;border-top:1px solid var(--border)">
+                  <div style="display:flex;gap:.5rem">
+                    <div style="flex:1;border:1.5px solid var(--border-dark);border-radius:9999px;padding:.375rem .875rem;font-size:.8rem;color:var(--text-muted)">Type a message...</div>
+                    <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;flex-shrink:0">➤</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-hint mt-2" style="text-align:center">Preview updates as you type</div>
+            </div>
+          </div>
+
+          <!-- Embed Code -->
+          <div class="card" style="margin-top:1.25rem">
+            <div class="card-header"><h3>Install Widget</h3></div>
+            <div class="card-body">
+              <div class="form-hint mb-2">Paste this code before the <code>&lt;/body&gt;</code> tag on your website:</div>
+              <div style="background:var(--sidebar-bg);color:#a5b4fc;padding:.875rem;border-radius:var(--radius);font-size:.75rem;font-family:monospace;line-height:1.7">
+                &lt;script src="https://chatbotai.io/widget.js"<br>
+                &nbsp;&nbsp;data-key="demo-key-xyz"<br>
+                &nbsp;&nbsp;data-bot="aria"&gt;<br>
+                &lt;/script&gt;
+              </div>
+              <button class="btn btn-secondary btn-sm w-full mt-2" onclick="navigator.clipboard.writeText('&lt;script src=\\'https://chatbotai.io/widget.js\\' data-key=\\'demo-key-xyz\\'&gt;&lt;/script&gt;');App.toast('Code copied!','success')">
+                <i class="fas fa-copy"></i> Copy Code
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/bot-builder.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => { App.init(); BotBuilder.init(); });</script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Help Center – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<header class="public-header">
+  <div class="nav-wrap">
+    <a href="index.html" class="nav-logo"><i class="fas fa-robot"></i> ChatBot AI</a>
+    <nav class="nav-links">
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="demo-chatbot.html">Live Demo</a>
+      <a href="help-center.html">Help</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-secondary btn-sm">Sign In</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+  </div>
+</header>
+
+<!-- Help Hero -->
+<div class="help-hero">
+  <h1>How can we help you?</h1>
+  <p style="opacity:.8;margin-bottom:1.5rem">Search our knowledge base or browse by category.</p>
+  <div class="help-search-wrap">
+    <i class="fas fa-search"></i>
+    <input type="text" id="helpSearch" placeholder="Search articles..." />
+  </div>
+</div>
+
+<!-- Categories -->
+<section class="section" style="background:var(--bg)">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2 class="section-title">Browse by Category</h2>
+    </div>
+    <div class="grid-3">
+      <div class="help-category-card" onclick="HelpCenter.filterCat('Setup')">
+        <div class="help-cat-icon">🚀</div>
+        <div style="font-weight:700;margin-bottom:.375rem">Getting Started</div>
+        <div class="text-sm text-muted">Setup guides and tutorials</div>
+        <div class="text-xs text-primary mt-2" id="cnt-Setup">0 articles</div>
+      </div>
+      <div class="help-category-card" onclick="HelpCenter.filterCat('Account')">
+        <div class="help-cat-icon">👤</div>
+        <div style="font-weight:700;margin-bottom:.375rem">Account & Profile</div>
+        <div class="text-sm text-muted">Manage your account settings</div>
+        <div class="text-xs text-primary mt-2" id="cnt-Account">0 articles</div>
+      </div>
+      <div class="help-category-card" onclick="HelpCenter.filterCat('Billing')">
+        <div class="help-cat-icon">💳</div>
+        <div style="font-weight:700;margin-bottom:.375rem">Billing & Plans</div>
+        <div class="text-sm text-muted">Subscriptions, invoices, refunds</div>
+        <div class="text-xs text-primary mt-2" id="cnt-Billing">0 articles</div>
+      </div>
+      <div class="help-category-card" onclick="HelpCenter.filterCat('Integration')">
+        <div class="help-cat-icon">🔌</div>
+        <div style="font-weight:700;margin-bottom:.375rem">Integrations</div>
+        <div class="text-sm text-muted">Connect third-party tools</div>
+        <div class="text-xs text-primary mt-2" id="cnt-Integration">0 articles</div>
+      </div>
+      <div class="help-category-card" onclick="HelpCenter.filterCat('Analytics')">
+        <div class="help-cat-icon">📊</div>
+        <div style="font-weight:700;margin-bottom:.375rem">Analytics & Reports</div>
+        <div class="text-sm text-muted">Understand your metrics</div>
+        <div class="text-xs text-primary mt-2" id="cnt-Analytics">0 articles</div>
+      </div>
+      <div class="help-category-card" onclick="HelpCenter.filterCat('Support')">
+        <div class="help-cat-icon">🎫</div>
+        <div style="font-weight:700;margin-bottom:.375rem">Support Workflow</div>
+        <div class="text-sm text-muted">Tickets and chat inbox</div>
+        <div class="text-xs text-primary mt-2" id="cnt-Support">0 articles</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Articles -->
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+      <h2 class="section-title" style="margin:0" id="articlesHeading">All Articles</h2>
+      <button class="btn btn-secondary btn-sm" id="clearFilter" style="display:none" onclick="HelpCenter.clearFilter()"><i class="fas fa-times"></i> Clear Filter</button>
+    </div>
+    <div class="card">
+      <div class="card-body" id="articleListEl"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="section" style="background:var(--bg)">
+  <div class="section-inner" style="text-align:center">
+    <h2 class="section-title">Still need help?</h2>
+    <p class="text-muted" style="margin-bottom:2rem">Our support team is here for you.</p>
+    <div style="display:flex;gap:1.25rem;justify-content:center;flex-wrap:wrap">
+      <div class="card" style="padding:1.75rem;text-align:center;max-width:220px;cursor:pointer" onclick="App.toast('Chat widget coming soon!','info')">
+        <div style="font-size:2rem;margin-bottom:.75rem">💬</div>
+        <div style="font-weight:700;margin-bottom:.375rem">Live Chat</div>
+        <div class="text-sm text-muted">Chat with us right now</div>
+      </div>
+      <div class="card" style="padding:1.75rem;text-align:center;max-width:220px;cursor:pointer" onclick="App.toast('Email support: support@chatbotai.com','info')">
+        <div style="font-size:2rem;margin-bottom:.75rem">📧</div>
+        <div style="font-weight:700;margin-bottom:.375rem">Email Support</div>
+        <div class="text-sm text-muted">We reply within 24 hours</div>
+      </div>
+      <div class="card" style="padding:1.75rem;text-align:center;max-width:220px;cursor:pointer" onclick="window.location.href='tickets.html'">
+        <div style="font-size:2rem;margin-bottom:.75rem">🎫</div>
+        <div style="font-weight:700;margin-bottom:.375rem">Submit a Ticket</div>
+        <div class="text-sm text-muted">Create a support request</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-bottom">
+      <span>© 2024 ChatBot AI. All rights reserved.</span>
+      <a href="index.html" style="color:var(--sidebar-text)">Back to Homepage</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+const HelpCenter = {
+  state: { cat: '', search: '' },
+
+  init() {
+    CB.initDemo();
+    this.renderCounts();
+    this.render();
+    document.getElementById('helpSearch').addEventListener('input', e => {
+      this.state.search = e.target.value.toLowerCase();
+      this.render();
+    });
+  },
+
+  getArticles() { return (CB.get(CB.KEYS.articles) || []).filter(a => a.status === 'published'); },
+
+  renderCounts() {
+    const arts = this.getArticles();
+    const cats = ['Setup','Account','Billing','Integration','Analytics','Support'];
+    cats.forEach(c => {
+      const el = document.getElementById('cnt-' + c);
+      if (el) { const n = arts.filter(a => a.category === c).length; el.textContent = n + ' article' + (n !== 1 ? 's' : ''); }
+    });
+  },
+
+  filtered() {
+    return this.getArticles().filter(a => {
+      if (this.state.cat && a.category !== this.state.cat) return false;
+      if (this.state.search && !a.title.toLowerCase().includes(this.state.search) && !a.content.toLowerCase().includes(this.state.search)) return false;
+      return true;
+    });
+  },
+
+  render() {
+    const articles = this.filtered();
+    const el = document.getElementById('articleListEl');
+    if (!el) return;
+    if (!articles.length) {
+      el.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><h3>No articles found</h3><p>Try different keywords or browse by category.</p></div>';
+      return;
+    }
+    el.innerHTML = articles.map(a => `
+      <div class="help-article-item" onclick="HelpCenter.view('${a.id}')">
+        <div>
+          <div class="font-semibold text-sm">${App.escHtml(a.title)}</div>
+          <div class="text-xs text-muted mt-1">
+            <span class="badge badge-primary" style="font-size:.65rem">${App.escHtml(a.category)}</span>
+            &nbsp;${(a.views||0).toLocaleString()} views
+          </div>
+        </div>
+        <i class="fas fa-chevron-right text-muted"></i>
+      </div>`).join('');
+  },
+
+  filterCat(cat) {
+    this.state.cat = cat;
+    document.getElementById('articlesHeading').textContent = cat + ' Articles';
+    document.getElementById('clearFilter').style.display = 'inline-flex';
+    this.render();
+    document.getElementById('articleListEl').closest('section').scrollIntoView({ behavior: 'smooth' });
+  },
+
+  clearFilter() {
+    this.state.cat = '';
+    document.getElementById('articlesHeading').textContent = 'All Articles';
+    document.getElementById('clearFilter').style.display = 'none';
+    this.render();
+  },
+
+  view(id) {
+    const a = this.getArticles().find(x => x.id === id);
+    if (!a) return;
+    const arts = CB.get(CB.KEYS.articles) || [];
+    const idx = arts.findIndex(x => x.id === id);
+    if (idx >= 0) { arts[idx].views = (arts[idx].views||0)+1; CB.set(CB.KEYS.articles,arts); }
+
+    const win = window.open('', '_blank', 'width=700,height=600');
+    win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${a.title}</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    </head><body style="max-width:680px;margin:0 auto;padding:2rem">
+    <a href="javascript:window.close()" class="btn btn-secondary btn-sm" style="margin-bottom:1.5rem"><i class="fas fa-arrow-left"></i> Back</a>
+    <div><span class="badge badge-primary">${a.category}</span>&nbsp;<span class="text-xs text-muted">${App.formatDate(a.updatedAt)}</span></div>
+    <h1 style="font-size:1.75rem;font-weight:800;margin:1rem 0">${a.title}</h1>
+    <div style="font-size:1rem;line-height:1.8;white-space:pre-wrap">${a.content}</div>
+    </body></html>`);
+  }
+};
+document.addEventListener('DOMContentLoaded', () => HelpCenter.init());
+</script>
+</body>
+</html>

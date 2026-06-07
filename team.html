@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Team – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-robot"></i><span>ChatBot AI</span></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="chat-inbox.html"><i class="fas fa-comments"></i> Chat Inbox</a>
+      <a href="tickets.html"><i class="fas fa-ticket"></i> Tickets</a>
+      <a href="knowledge-base.html"><i class="fas fa-book-open"></i> Knowledge Base</a>
+      <div class="sidebar-section">Configure</div>
+      <a href="bot-builder.html"><i class="fas fa-robot"></i> Bot Builder</a>
+      <a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a>
+      <a href="integrations.html"><i class="fas fa-plug"></i> Integrations</a>
+      <div class="sidebar-section">Admin</div>
+      <a href="team.html" class="active"><i class="fas fa-users"></i> Team</a>
+      <a href="settings.html"><i class="fas fa-gear"></i> Settings</a>
+      <a href="billing.html"><i class="fas fa-credit-card"></i> Billing</a>
+      <a href="help-center.html"><i class="fas fa-circle-question"></i> Help Center</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" data-user-avatar>AJ</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Alex Johnson</div>
+          <div class="sidebar-user-role" data-user-role>Administrator</div>
+        </div>
+      </div>
+      <a href="#" data-logout style="display:flex;align-items:center;gap:.5rem;padding:.5rem .875rem;color:#475569;font-size:.8rem;border-radius:var(--radius)" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-header">
+      <div class="app-header-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <span class="page-title">Team Management</span>
+      </div>
+      <div class="app-header-right">
+        <button class="btn btn-primary btn-sm" onclick="Team.openAdd()"><i class="fas fa-user-plus"></i> Add Member</button>
+      </div>
+    </header>
+
+    <div class="app-content">
+      <!-- Stats -->
+      <div class="stats-grid" style="margin-bottom:1.5rem">
+        <div class="stat-card"><div class="stat-card-header"><div><div class="stat-value" id="teamTotal">—</div><div class="stat-label">Total Members</div></div><div class="stat-icon purple"><i class="fas fa-users"></i></div></div></div>
+        <div class="stat-card"><div class="stat-card-header"><div><div class="stat-value" id="teamOnline">—</div><div class="stat-label">Online Now</div></div><div class="stat-icon green"><i class="fas fa-circle"></i></div></div></div>
+        <div class="stat-card"><div class="stat-card-header"><div><div class="stat-value" id="teamAgents">—</div><div class="stat-label">Support Agents</div></div><div class="stat-icon blue"><i class="fas fa-headset"></i></div></div></div>
+        <div class="stat-card"><div class="stat-card-header"><div><div class="stat-value" id="teamAvgConvs">—</div><div class="stat-label">Avg Conversations</div></div><div class="stat-icon yellow"><i class="fas fa-comment"></i></div></div></div>
+      </div>
+
+      <!-- Members Grid -->
+      <div class="grid-auto" id="teamGrid"></div>
+
+      <!-- Table view -->
+      <div class="card" style="margin-top:1.25rem">
+        <div class="card-header"><h3>All Members</h3></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Member</th><th>Role</th><th>Status</th><th>Conversations</th><th>Tickets</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody id="teamTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Add/Edit Member Modal -->
+<div class="modal-overlay" id="memberModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="memberModalTitle">Add Team Member</h3>
+      <button class="modal-close"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-control" id="memberName" placeholder="Jane Smith" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input type="email" class="form-control" id="memberEmail" placeholder="jane@company.com" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select class="form-select" id="memberRole">
+            <option value="agent">Support Agent</option>
+            <option value="admin">Administrator</option>
+            <option value="viewer">Viewer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="memberStatus">
+            <option value="online">Online</option>
+            <option value="busy">Busy</option>
+            <option value="offline">Offline</option>
+          </select>
+        </div>
+      </div>
+      <div class="alert alert-info">In production, the team member would receive an invitation email to create their account.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary modal-close">Cancel</button>
+      <button class="btn btn-primary" id="saveMemberBtn">Add Member</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+const Team = {
+  state: { editingId: null },
+  getTeam() { return CB.get(CB.KEYS.team) || []; },
+  save(t) { CB.set(CB.KEYS.team, t); },
+
+  init() {
+    if (!Auth.guard()) return;
+    App.init();
+    this.render();
+    document.getElementById('saveMemberBtn').addEventListener('click', () => this.save_());
+  },
+
+  render() {
+    const members = this.getTeam();
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('teamTotal', members.length);
+    set('teamOnline', members.filter(m => m.status === 'online').length);
+    set('teamAgents', members.filter(m => m.role === 'agent').length);
+    const avgConvs = members.length ? Math.round(members.reduce((s, m) => s + (m.conversations || 0), 0) / members.length) : 0;
+    set('teamAvgConvs', avgConvs);
+
+    const roleColors = { admin: '#6366f1', agent: '#10b981', owner: '#f59e0b', viewer: '#94a3b8' };
+    const statusColors = { online: '#10b981', busy: '#ef4444', offline: '#94a3b8' };
+    const roleLabels = { admin: 'Admin', agent: 'Agent', owner: 'Owner', viewer: 'Viewer' };
+
+    const grid = document.getElementById('teamGrid');
+    if (grid) {
+      grid.innerHTML = members.map(m => `
+        <div class="member-card">
+          <div class="member-avatar-wrap">
+            <div class="avatar avatar-xl" style="background:${roleColors[m.role]||'#6366f1'};color:#fff;font-size:1.25rem">${m.avatar}</div>
+            <div class="status-dot ${m.status}" title="${m.status}"></div>
+          </div>
+          <div class="member-name">${App.escHtml(m.name)}</div>
+          <div class="member-email">${App.escHtml(m.email)}</div>
+          <div>
+            <span class="badge" style="background:${roleColors[m.role]||'#6366f1'}20;color:${roleColors[m.role]||'#6366f1'}">${roleLabels[m.role]||m.role}</span>
+            <span class="badge badge-neutral" style="margin-left:.25rem">${m.status}</span>
+          </div>
+          <div class="member-stats">
+            <div class="member-stat"><div class="member-stat-val">${m.conversations||0}</div><div class="member-stat-lbl">Convs</div></div>
+            <div class="member-stat"><div class="member-stat-val">${m.tickets||0}</div><div class="member-stat-lbl">Tickets</div></div>
+          </div>
+          <div style="display:flex;gap:.5rem;margin-top:.75rem;justify-content:center">
+            <button class="btn btn-sm btn-secondary" onclick="Team.openEdit('${m.id}')"><i class="fas fa-pen"></i></button>
+            <select class="form-select" style="font-size:.75rem;padding:.25rem .5rem" onchange="Team.updateStatus('${m.id}',this.value)">
+              <option value="online" ${m.status==='online'?'selected':''}>🟢 Online</option>
+              <option value="busy" ${m.status==='busy'?'selected':''}>🔴 Busy</option>
+              <option value="offline" ${m.status==='offline'?'selected':''}>⚫ Offline</option>
+            </select>
+          </div>
+        </div>`).join('');
+    }
+
+    const table = document.getElementById('teamTable');
+    if (table) {
+      table.innerHTML = members.map(m => `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <div class="avatar avatar-sm" style="background:${roleColors[m.role]||'#6366f1'};color:#fff">${m.avatar}</div>
+              <div><div class="font-semibold text-sm">${App.escHtml(m.name)}</div><div class="text-xs text-muted">${App.escHtml(m.email)}</div></div>
+            </div>
+          </td>
+          <td><span class="badge" style="background:${roleColors[m.role]||'#6366f1'}20;color:${roleColors[m.role]||'#6366f1'}">${roleLabels[m.role]||m.role}</span></td>
+          <td><span class="text-sm" style="color:${statusColors[m.status]}">● ${m.status}</span></td>
+          <td class="text-sm">${m.conversations||0}</td>
+          <td class="text-sm">${m.tickets||0}</td>
+          <td class="text-sm text-muted">${App.formatDate(m.joined)}</td>
+          <td>
+            <div class="table-actions">
+              <button class="btn btn-sm btn-outline" onclick="Team.openEdit('${m.id}')"><i class="fas fa-pen"></i></button>
+              <button class="btn btn-sm btn-danger" onclick="Team.delete_('${m.id}')"><i class="fas fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+  },
+
+  openAdd() {
+    this.state.editingId = null;
+    document.getElementById('memberModalTitle').textContent = 'Add Team Member';
+    document.getElementById('memberName').value = '';
+    document.getElementById('memberEmail').value = '';
+    document.getElementById('memberRole').value = 'agent';
+    document.getElementById('memberStatus').value = 'online';
+    App.openModal('memberModal');
+  },
+
+  openEdit(id) {
+    const m = this.getTeam().find(x => x.id === id);
+    if (!m) return;
+    this.state.editingId = id;
+    document.getElementById('memberModalTitle').textContent = 'Edit Team Member';
+    document.getElementById('memberName').value = m.name;
+    document.getElementById('memberEmail').value = m.email;
+    document.getElementById('memberRole').value = m.role;
+    document.getElementById('memberStatus').value = m.status;
+    App.openModal('memberModal');
+  },
+
+  save_() {
+    const name = document.getElementById('memberName').value.trim();
+    const email = document.getElementById('memberEmail').value.trim();
+    if (!name || !email) { App.toast('Name and email are required', 'error'); return; }
+    const team = this.getTeam();
+    if (this.state.editingId) {
+      const idx = team.findIndex(m => m.id === this.state.editingId);
+      if (idx >= 0) {
+        team[idx] = { ...team[idx], name, email, role: document.getElementById('memberRole').value, status: document.getElementById('memberStatus').value };
+        App.toast('Member updated!', 'success');
+      }
+    } else {
+      team.push({ id: App.generateId('u'), name, email, role: document.getElementById('memberRole').value, status: document.getElementById('memberStatus').value, avatar: name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2), conversations: 0, tickets: 0, joined: new Date().toISOString().split('T')[0] });
+      App.toast('Team member added!', 'success');
+    }
+    this.save(team);
+    App.closeModal('memberModal');
+    this.render();
+  },
+
+  updateStatus(id, status) {
+    const team = this.getTeam();
+    const idx = team.findIndex(m => m.id === id);
+    if (idx >= 0) { team[idx].status = status; this.save(team); App.toast('Status updated', 'success'); this.render(); }
+  },
+
+  delete_(id) {
+    const me = Auth.getUser();
+    if (me?.id === id) { App.toast('Cannot remove yourself', 'error'); return; }
+    App.confirm('Remove this team member?', () => {
+      const team = this.getTeam().filter(m => m.id !== id);
+      this.save(team);
+      App.toast('Member removed', 'success');
+      this.render();
+    });
+  }
+};
+document.addEventListener('DOMContentLoaded', () => Team.init());
+</script>
+</body>
+</html>

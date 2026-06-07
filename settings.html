@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Settings – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-robot"></i><span>ChatBot AI</span></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="chat-inbox.html"><i class="fas fa-comments"></i> Chat Inbox</a>
+      <a href="tickets.html"><i class="fas fa-ticket"></i> Tickets</a>
+      <a href="knowledge-base.html"><i class="fas fa-book-open"></i> Knowledge Base</a>
+      <div class="sidebar-section">Configure</div>
+      <a href="bot-builder.html"><i class="fas fa-robot"></i> Bot Builder</a>
+      <a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a>
+      <a href="integrations.html"><i class="fas fa-plug"></i> Integrations</a>
+      <div class="sidebar-section">Admin</div>
+      <a href="team.html"><i class="fas fa-users"></i> Team</a>
+      <a href="settings.html" class="active"><i class="fas fa-gear"></i> Settings</a>
+      <a href="billing.html"><i class="fas fa-credit-card"></i> Billing</a>
+      <a href="help-center.html"><i class="fas fa-circle-question"></i> Help Center</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" data-user-avatar>AJ</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Alex Johnson</div>
+          <div class="sidebar-user-role" data-user-role>Administrator</div>
+        </div>
+      </div>
+      <a href="#" data-logout style="display:flex;align-items:center;gap:.5rem;padding:.5rem .875rem;color:#475569;font-size:.8rem;border-radius:var(--radius)" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-header">
+      <div class="app-header-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <span class="page-title">Settings</span>
+      </div>
+      <div class="app-header-right">
+        <button class="btn btn-primary btn-sm" id="saveSettingsBtn"><i class="fas fa-save"></i> Save Changes</button>
+      </div>
+    </header>
+
+    <div class="app-content">
+      <div class="settings-layout">
+        <!-- Settings Nav -->
+        <div>
+          <div class="card settings-nav">
+            <div class="card-body">
+              <div class="settings-nav-item active" onclick="Settings.showSection('company',this)"><i class="fas fa-building"></i> Company Profile</div>
+              <div class="settings-nav-item" onclick="Settings.showSection('widget',this)"><i class="fas fa-comment-dots"></i> Chat Widget</div>
+              <div class="settings-nav-item" onclick="Settings.showSection('hours',this)"><i class="fas fa-clock"></i> Business Hours</div>
+              <div class="settings-nav-item" onclick="Settings.showSection('autoreply',this)"><i class="fas fa-reply"></i> Auto-Reply</div>
+              <div class="settings-nav-item" onclick="Settings.showSection('notifications',this)"><i class="fas fa-bell"></i> Notifications</div>
+              <div class="settings-nav-item" onclick="Settings.showSection('danger',this)"><i class="fas fa-triangle-exclamation" style="color:var(--danger)"></i> Danger Zone</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Panels -->
+        <div>
+          <!-- Company -->
+          <div class="card settings-section active" id="sec-company">
+            <div class="card-header"><h3>Company Profile</h3></div>
+            <div class="card-body">
+              <div class="settings-group">
+                <div class="settings-group-title">Basic Information</div>
+                <div class="settings-group-desc">Your company details displayed in the chat widget and emails.</div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Company Name</label>
+                    <input type="text" class="form-control" id="companyName" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Website</label>
+                    <input type="url" class="form-control" id="companyWebsite" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Support Email</label>
+                    <input type="email" class="form-control" id="companyEmail" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="companyPhone" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Timezone</label>
+                  <select class="form-select" id="companyTimezone">
+                    <option value="America/New_York">Eastern Time (US & Canada)</option>
+                    <option value="America/Chicago">Central Time (US & Canada)</option>
+                    <option value="America/Denver">Mountain Time (US & Canada)</option>
+                    <option value="America/Los_Angeles">Pacific Time (US & Canada)</option>
+                    <option value="Europe/London">London</option>
+                    <option value="Europe/Paris">Paris</option>
+                    <option value="Asia/Manila">Manila (PHT)</option>
+                    <option value="Asia/Tokyo">Tokyo</option>
+                    <option value="Australia/Sydney">Sydney</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Widget -->
+          <div class="card settings-section" id="sec-widget">
+            <div class="card-header"><h3>Chat Widget</h3></div>
+            <div class="card-body">
+              <div class="settings-group">
+                <div class="settings-group-title">Widget Appearance</div>
+                <div class="form-group">
+                  <label class="form-label">Primary Color</label>
+                  <div style="display:flex;gap:.75rem;align-items:center">
+                    <input type="color" id="widgetColor" value="#6366f1" style="width:48px;height:36px;cursor:pointer;border:1px solid var(--border);border-radius:var(--radius)" />
+                    <span class="text-sm text-muted">Widget bubble and header color</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Widget Position</label>
+                  <select class="form-select" id="widgetPosition">
+                    <option value="bottom-right">Bottom Right</option>
+                    <option value="bottom-left">Bottom Left</option>
+                  </select>
+                </div>
+                <div class="form-check mb-2">
+                  <input type="checkbox" id="widgetMobile" />
+                  <label for="widgetMobile">Show widget on mobile devices</label>
+                </div>
+              </div>
+              <div class="settings-group">
+                <div class="settings-group-title">Embed Code</div>
+                <div class="settings-group-desc">Add this snippet to your website's HTML to display the chat widget.</div>
+                <div style="background:var(--sidebar-bg);color:#a5b4fc;padding:1rem;border-radius:var(--radius);font-family:monospace;font-size:.8125rem;line-height:1.8">
+                  &lt;!-- ChatBot AI Widget --&gt;<br>
+                  &lt;script<br>
+                  &nbsp;&nbsp;src="https://chatbotai.io/widget.js"<br>
+                  &nbsp;&nbsp;data-key="<span style="color:#fcd34d">YOUR-KEY-HERE</span>"&gt;<br>
+                  &lt;/script&gt;
+                </div>
+                <button class="btn btn-secondary btn-sm mt-2" onclick="App.toast('Code copied!','success')"><i class="fas fa-copy"></i> Copy Embed Code</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Business Hours -->
+          <div class="card settings-section" id="sec-hours">
+            <div class="card-header"><h3>Business Hours</h3></div>
+            <div class="card-body">
+              <div class="form-check mb-4">
+                <input type="checkbox" id="hoursEnabled" />
+                <label for="hoursEnabled">Enable business hours (bot shows offline message outside hours)</label>
+              </div>
+              <div id="hoursGrid"></div>
+            </div>
+          </div>
+
+          <!-- Auto-Reply -->
+          <div class="card settings-section" id="sec-autoreply">
+            <div class="card-header"><h3>Auto-Reply Settings</h3></div>
+            <div class="card-body">
+              <div class="settings-group">
+                <div class="settings-group-title">Instant Auto-Reply</div>
+                <div class="form-check mb-3">
+                  <input type="checkbox" id="autoReplyEnabled" />
+                  <label for="autoReplyEnabled">Send automatic reply when new conversation starts</label>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Auto-Reply Message</label>
+                  <textarea class="form-control" id="autoReplyMsg" style="min-height:80px"></textarea>
+                </div>
+              </div>
+              <div class="settings-group">
+                <div class="settings-group-title">Outside Hours Message</div>
+                <div class="form-group">
+                  <label class="form-label">Message shown when outside business hours</label>
+                  <textarea class="form-control" id="outsideHoursMsg" style="min-height:80px"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notifications -->
+          <div class="card settings-section" id="sec-notifications">
+            <div class="card-header"><h3>Notification Preferences</h3></div>
+            <div class="card-body">
+              <div class="settings-group">
+                <div class="settings-group-title">Delivery Methods</div>
+                <div class="form-check mb-2"><input type="checkbox" id="notifEmail" /><label for="notifEmail">Email notifications</label></div>
+                <div class="form-check mb-2"><input type="checkbox" id="notifBrowser" /><label for="notifBrowser">Browser push notifications</label></div>
+              </div>
+              <div class="settings-group">
+                <div class="settings-group-title">Notify me when...</div>
+                <div class="form-check mb-2"><input type="checkbox" id="notifNewConv" /><label for="notifNewConv">New conversation starts</label></div>
+                <div class="form-check mb-2"><input type="checkbox" id="notifNewTicket" /><label for="notifNewTicket">New ticket is created</label></div>
+                <div class="form-check mb-2"><input type="checkbox" id="notifTicketUpdate" /><label for="notifTicketUpdate">Ticket status changes</label></div>
+                <div class="form-check mb-2"><input type="checkbox" id="notifMention" /><label for="notifMention">Someone mentions me</label></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="card settings-section" id="sec-danger">
+            <div class="card-header"><h3>Danger Zone</h3></div>
+            <div class="card-body">
+              <div class="settings-group" style="border-color:var(--danger)">
+                <div class="settings-group-title">Reset Demo Data</div>
+                <div class="settings-group-desc">Reset all conversations, tickets, and settings to default demo data.</div>
+                <button class="btn btn-danger" id="resetDemoBtn"><i class="fas fa-rotate"></i> Reset Demo Data</button>
+              </div>
+              <div class="settings-group" style="border-color:var(--danger)">
+                <div class="settings-group-title">Sign Out of All Devices</div>
+                <div class="settings-group-desc">Sign out from all active sessions across all devices.</div>
+                <button class="btn btn-danger" data-logout><i class="fas fa-sign-out-alt"></i> Sign Out Everywhere</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+const Settings = {
+  init() {
+    if (!Auth.guard()) return;
+    App.init();
+    this.load();
+    document.getElementById('saveSettingsBtn').addEventListener('click', () => this.save());
+  },
+
+  getSettings() { return CB.get(CB.KEYS.settings) || CB.DEMO.settings; },
+
+  load() {
+    const s = this.getSettings();
+    const c = s.company || {};
+    this.setVal('companyName', c.name);
+    this.setVal('companyWebsite', c.website);
+    this.setVal('companyEmail', c.email);
+    this.setVal('companyPhone', c.phone);
+    this.setVal('companyTimezone', c.timezone);
+
+    const w = s.widget || {};
+    this.setVal('widgetColor', w.color || '#6366f1');
+    this.setVal('widgetPosition', w.position || 'bottom-right');
+    this.setChk('widgetMobile', w.showOnMobile !== false);
+
+    const bh = s.businessHours || {};
+    this.setChk('hoursEnabled', bh.enabled);
+    this.renderHoursGrid(bh);
+
+    const ar = s.autoReply || {};
+    this.setChk('autoReplyEnabled', ar.enabled);
+    this.setVal('autoReplyMsg', ar.message);
+    this.setVal('outsideHoursMsg', ar.outsideHoursMessage);
+
+    const n = s.notifications || {};
+    this.setChk('notifEmail', n.email);
+    this.setChk('notifBrowser', n.browser);
+    this.setChk('notifNewConv', n.newConversation);
+    this.setChk('notifNewTicket', n.newTicket);
+    this.setChk('notifTicketUpdate', n.ticketUpdate);
+    this.setChk('notifMention', n.mention);
+  },
+
+  setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; },
+  getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; },
+  setChk(id, v) { const el = document.getElementById(id); if (el) el.checked = !!v; },
+  getChk(id) { const el = document.getElementById(id); return el ? el.checked : false; },
+
+  renderHoursGrid(bh) {
+    const el = document.getElementById('hoursGrid');
+    if (!el) return;
+    const days = [['mon','Monday'],['tue','Tuesday'],['wed','Wednesday'],['thu','Thursday'],['fri','Friday'],['sat','Saturday'],['sun','Sunday']];
+    const hours = bh.hours || {};
+    el.innerHTML = days.map(([key, label]) => {
+      const h = hours[key] || { open: '09:00', close: '18:00', active: false };
+      return `<div style="display:flex;align-items:center;gap:1rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
+        <div style="width:100px;font-size:.875rem;font-weight:600">${label}</div>
+        <input type="checkbox" id="day_${key}" ${h.active?'checked':''} />
+        <input type="time" class="form-control" id="open_${key}" value="${h.open}" style="max-width:120px" ${h.active?'':'disabled'} />
+        <span class="text-sm text-muted">to</span>
+        <input type="time" class="form-control" id="close_${key}" value="${h.close}" style="max-width:120px" ${h.active?'':'disabled'} />
+      </div>`;
+    }).join('');
+    days.forEach(([key]) => {
+      document.getElementById('day_' + key)?.addEventListener('change', (e) => {
+        const active = e.target.checked;
+        document.getElementById('open_' + key).disabled = !active;
+        document.getElementById('close_' + key).disabled = !active;
+      });
+    });
+  },
+
+  save() {
+    const days = ['mon','tue','wed','thu','fri','sat','sun'];
+    const hours = {};
+    days.forEach(d => {
+      hours[d] = {
+        active: document.getElementById('day_' + d)?.checked || false,
+        open: document.getElementById('open_' + d)?.value || '09:00',
+        close: document.getElementById('close_' + d)?.value || '18:00',
+      };
+    });
+    const s = {
+      company: { name: this.getVal('companyName'), website: this.getVal('companyWebsite'), email: this.getVal('companyEmail'), phone: this.getVal('companyPhone'), timezone: this.getVal('companyTimezone') },
+      widget: { color: this.getVal('widgetColor'), position: this.getVal('widgetPosition'), showOnMobile: this.getChk('widgetMobile') },
+      businessHours: { enabled: this.getChk('hoursEnabled'), hours },
+      autoReply: { enabled: this.getChk('autoReplyEnabled'), message: this.getVal('autoReplyMsg'), outsideHoursMessage: this.getVal('outsideHoursMsg') },
+      notifications: { email: this.getChk('notifEmail'), browser: this.getChk('notifBrowser'), newConversation: this.getChk('notifNewConv'), newTicket: this.getChk('notifNewTicket'), ticketUpdate: this.getChk('notifTicketUpdate'), mention: this.getChk('notifMention') },
+    };
+    CB.set(CB.KEYS.settings, s);
+    App.toast('Settings saved!', 'success');
+  },
+
+  showSection(id, el) {
+    document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
+    document.getElementById('sec-' + id)?.classList.add('active');
+    el.classList.add('active');
+  }
+};
+document.addEventListener('DOMContentLoaded', () => Settings.init());
+</script>
+</body>
+</html>

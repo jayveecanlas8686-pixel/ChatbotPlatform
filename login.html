@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign In – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <div style="font-size:2.5rem;margin-bottom:1rem">🤖</div>
+      <h1>Welcome back to ChatBot AI</h1>
+      <p>Sign in to manage your AI chatbot, support tickets, and customer conversations.</p>
+      <div class="auth-feature-list">
+        <div class="auth-feature"><i class="fas fa-check-circle"></i> AI-powered responses 24/7</div>
+        <div class="auth-feature"><i class="fas fa-check-circle"></i> Unified team inbox</div>
+        <div class="auth-feature"><i class="fas fa-check-circle"></i> Real-time analytics dashboard</div>
+        <div class="auth-feature"><i class="fas fa-check-circle"></i> Knowledge base management</div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-form-wrap fade-in">
+      <div class="auth-logo"><i class="fas fa-robot"></i> ChatBot AI</div>
+      <h2>Sign in to your account</h2>
+      <div class="subtitle">Don't have an account? <a href="register.html">Start free trial</a></div>
+
+      <div id="loginError" class="alert alert-danger" style="display:none"></div>
+
+      <!-- Demo Accounts -->
+      <div style="background:var(--primary-light);border:1px solid rgba(99,102,241,.2);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem">
+        <div class="text-sm font-semibold text-primary mb-2">🎯 Demo Accounts (click to auto-fill)</div>
+        <div style="display:flex;flex-direction:column;gap:.375rem">
+          <button class="demo-login-btn btn btn-sm btn-secondary" data-email="admin@example.com" style="justify-content:flex-start">
+            <i class="fas fa-shield-halved"></i> Admin – admin@example.com
+          </button>
+          <button class="demo-login-btn btn btn-sm btn-secondary" data-email="agent@example.com" style="justify-content:flex-start">
+            <i class="fas fa-headset"></i> Agent – agent@example.com
+          </button>
+          <button class="demo-login-btn btn btn-sm btn-secondary" data-email="owner@example.com" style="justify-content:flex-start">
+            <i class="fas fa-building"></i> Owner – owner@example.com
+          </button>
+        </div>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <div style="position:relative">
+            <i class="fas fa-envelope" style="position:absolute;left:.875rem;top:50%;transform:translateY(-50%);color:var(--text-muted)"></i>
+            <input type="email" id="email" class="form-control" placeholder="you@company.com" style="padding-left:2.5rem" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">
+            Password
+            <a href="#" style="float:right;font-weight:400;font-size:.8rem">Forgot password?</a>
+          </label>
+          <div style="position:relative">
+            <i class="fas fa-lock" style="position:absolute;left:.875rem;top:50%;transform:translateY(-50%);color:var(--text-muted)"></i>
+            <input type="password" id="password" class="form-control" placeholder="••••••••" style="padding-left:2.5rem" required />
+          </div>
+        </div>
+        <div class="form-check mb-4">
+          <input type="checkbox" id="remember" />
+          <label for="remember">Remember me for 30 days</label>
+        </div>
+        <button type="submit" class="btn btn-primary w-full"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+      </form>
+
+      <div class="auth-footer">
+        New to ChatBot AI? <a href="register.html">Create a free account</a>
+      </div>
+      <div class="auth-footer" style="margin-top:.5rem">
+        <a href="index.html" style="color:var(--text-muted)"><i class="fas fa-arrow-left"></i> Back to homepage</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => LoginPage.init());</script>
+</body>
+</html>

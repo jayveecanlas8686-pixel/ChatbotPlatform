@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Billing – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-robot"></i><span>ChatBot AI</span></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="chat-inbox.html"><i class="fas fa-comments"></i> Chat Inbox</a>
+      <a href="tickets.html"><i class="fas fa-ticket"></i> Tickets</a>
+      <a href="knowledge-base.html"><i class="fas fa-book-open"></i> Knowledge Base</a>
+      <div class="sidebar-section">Configure</div>
+      <a href="bot-builder.html"><i class="fas fa-robot"></i> Bot Builder</a>
+      <a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a>
+      <a href="integrations.html"><i class="fas fa-plug"></i> Integrations</a>
+      <div class="sidebar-section">Admin</div>
+      <a href="team.html"><i class="fas fa-users"></i> Team</a>
+      <a href="settings.html"><i class="fas fa-gear"></i> Settings</a>
+      <a href="billing.html" class="active"><i class="fas fa-credit-card"></i> Billing</a>
+      <a href="help-center.html"><i class="fas fa-circle-question"></i> Help Center</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" data-user-avatar>AJ</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Alex Johnson</div>
+          <div class="sidebar-user-role" data-user-role>Administrator</div>
+        </div>
+      </div>
+      <a href="#" data-logout style="display:flex;align-items:center;gap:.5rem;padding:.5rem .875rem;color:#475569;font-size:.8rem;border-radius:var(--radius)" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-header">
+      <div class="app-header-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <span class="page-title">Billing & Subscription</span>
+      </div>
+    </header>
+
+    <div class="app-content">
+      <!-- Current Plan -->
+      <div class="grid-2" style="margin-bottom:1.5rem">
+        <div class="card">
+          <div class="card-header"><h3>Current Plan</h3><span class="badge badge-success">Active</span></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+              <div>
+                <div style="font-size:1.5rem;font-weight:800" id="planName">Professional</div>
+                <div class="text-muted text-sm" id="planPrice">$49/month</div>
+              </div>
+              <div style="text-align:right">
+                <div class="text-xs text-muted">Next billing date</div>
+                <div class="font-semibold text-sm" id="nextBilling">—</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:.75rem">
+              <button class="btn btn-primary btn-sm" onclick="Billing.showUpgrade()"><i class="fas fa-arrow-up"></i> Upgrade Plan</button>
+              <button class="btn btn-secondary btn-sm" onclick="Billing.cancelPlan()"><i class="fas fa-times"></i> Cancel Plan</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>Payment Method</h3></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+              <div style="width:56px;height:36px;background:linear-gradient(135deg,#1a1f71,#1a1f71);border-radius:.375rem;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;font-weight:700">VISA</div>
+              <div>
+                <div class="font-semibold text-sm" id="cardInfo">Visa ending in 4242</div>
+                <div class="text-xs text-muted" id="cardExpiry">Expires 09/26</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="App.toast('Payment update feature coming soon!','info')"><i class="fas fa-pen"></i> Update Card</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usage -->
+      <div class="card" style="margin-bottom:1.5rem">
+        <div class="card-header"><h3>Usage This Month</h3></div>
+        <div class="card-body">
+          <div class="grid-3">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
+                <span class="text-sm font-semibold">Conversations</span>
+                <span class="text-sm text-muted" id="convUsage">—</span>
+              </div>
+              <div class="plan-usage-bar"><div class="plan-usage-fill" id="convBar" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
+                <span class="text-sm font-semibold">Active Bots</span>
+                <span class="text-sm text-muted" id="botUsage">—</span>
+              </div>
+              <div class="plan-usage-bar"><div class="plan-usage-fill" id="botBar" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
+                <span class="text-sm font-semibold">Team Agents</span>
+                <span class="text-sm text-muted" id="agentUsage">—</span>
+              </div>
+              <div class="plan-usage-bar"><div class="plan-usage-fill" id="agentBar" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan Comparison -->
+      <div class="card" style="margin-bottom:1.5rem">
+        <div class="card-header"><h3>Upgrade Your Plan</h3></div>
+        <div class="card-body">
+          <div class="pricing-grid" style="max-width:100%;margin:0">
+            <div class="pricing-card">
+              <div class="pricing-plan">Starter</div>
+              <div class="pricing-price">$0<span>/month</span></div>
+              <ul class="pricing-features">
+                <li><i class="fas fa-check"></i> 500 conversations</li>
+                <li><i class="fas fa-check"></i> 1 chatbot</li>
+                <li><i class="fas fa-check"></i> Basic analytics</li>
+                <li class="disabled"><i class="fas fa-times"></i> Integrations</li>
+              </ul>
+              <button class="btn btn-secondary w-full btn-sm" onclick="Billing.changePlan('starter')">Downgrade to Starter</button>
+            </div>
+            <div class="pricing-card popular">
+              <div class="pricing-badge">Current Plan</div>
+              <div class="pricing-plan">Professional</div>
+              <div class="pricing-price">$49<span>/month</span></div>
+              <ul class="pricing-features">
+                <li><i class="fas fa-check"></i> 5,000 conversations</li>
+                <li><i class="fas fa-check"></i> 3 chatbots</li>
+                <li><i class="fas fa-check"></i> Advanced analytics</li>
+                <li><i class="fas fa-check"></i> All integrations</li>
+              </ul>
+              <button class="btn btn-secondary w-full btn-sm" disabled>Current Plan</button>
+            </div>
+            <div class="pricing-card">
+              <div class="pricing-plan">Enterprise</div>
+              <div class="pricing-price">$149<span>/month</span></div>
+              <ul class="pricing-features">
+                <li><i class="fas fa-check"></i> Unlimited conversations</li>
+                <li><i class="fas fa-check"></i> Unlimited bots</li>
+                <li><i class="fas fa-check"></i> White-label</li>
+                <li><i class="fas fa-check"></i> Dedicated support</li>
+              </ul>
+              <button class="btn btn-primary w-full btn-sm" onclick="Billing.changePlan('enterprise')"><i class="fas fa-arrow-up"></i> Upgrade</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invoice History -->
+      <div class="card">
+        <div class="card-header"><h3>Invoice History</h3><button class="btn btn-sm btn-secondary" onclick="App.toast('Download all invoices as ZIP','info')"><i class="fas fa-download"></i> Download All</button></div>
+        <div class="card-body" id="invoiceList"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+const Billing = {
+  init() {
+    if (!Auth.guard()) return;
+    App.init();
+    this.render();
+  },
+
+  getData() { return CB.get(CB.KEYS.billing) || CB.DEMO.billing; },
+  save(d) { CB.set(CB.KEYS.billing, d); },
+
+  render() {
+    const d = this.getData();
+    const planNames = { starter: 'Starter', professional: 'Professional', enterprise: 'Enterprise' };
+    const planPrices = { starter: 'Free', professional: '$49/month', enterprise: '$149/month' };
+
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('planName', planNames[d.plan] || d.plan);
+    set('planPrice', planPrices[d.plan] || '$49/month');
+    set('nextBilling', App.formatDate(d.nextBillingDate));
+    set('cardInfo', d.card ? `${d.card.brand} ending in ${d.card.last4}` : 'No card on file');
+    set('cardExpiry', d.card ? `Expires ${d.card.expiry}` : '');
+
+    const u = d.usage || {};
+    set('convUsage', `${(u.conversations||0).toLocaleString()} / ${(u.limit||0).toLocaleString()}`);
+    set('botUsage', `${u.bots||0} / ${u.botLimit||0}`);
+    set('agentUsage', `${u.agents||0} / ${u.agentLimit||0}`);
+
+    const convPct = u.limit ? Math.min(Math.round(u.conversations/u.limit*100),100) : 0;
+    const botPct = u.botLimit ? Math.min(Math.round(u.bots/u.botLimit*100),100) : 0;
+    const agentPct = u.agentLimit ? Math.min(Math.round(u.agents/u.agentLimit*100),100) : 0;
+    const setBar = (id, pct) => { const el = document.getElementById(id); if (el) el.style.width = pct + '%'; };
+    setBar('convBar', convPct);
+    setBar('botBar', botPct);
+    setBar('agentBar', agentPct);
+
+    const invoiceEl = document.getElementById('invoiceList');
+    if (invoiceEl && d.invoices) {
+      invoiceEl.innerHTML = d.invoices.map(inv => `
+        <div class="invoice-row">
+          <div>
+            <div class="font-semibold text-sm">${App.escHtml(inv.description)}</div>
+            <div class="text-xs text-muted">${inv.id} · ${App.formatDate(inv.date)}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem">
+            <span class="badge badge-success">${inv.status}</span>
+            <span class="font-semibold">$${inv.amount}.00</span>
+            <button class="btn btn-sm btn-secondary" onclick="App.toast('Download invoice ${inv.id}','info')"><i class="fas fa-download"></i></button>
+          </div>
+        </div>`).join('') || '<div class="text-muted text-sm">No invoices yet.</div>';
+    }
+  },
+
+  changePlan(plan) {
+    if (!confirm(`Switch to the ${plan} plan? This is a demo — no real charge will occur.`)) return;
+    const d = this.getData();
+    const limits = { starter: { conversations: 0, limit: 500, bots: 1, botLimit: 1, agents: 1, agentLimit: 1 }, professional: { conversations: d.usage.conversations, limit: 5000, bots: d.usage.bots, botLimit: 3, agents: d.usage.agents, agentLimit: 10 }, enterprise: { conversations: d.usage.conversations, limit: Infinity, bots: d.usage.bots, botLimit: 999, agents: d.usage.agents, agentLimit: 999 } };
+    d.plan = plan;
+    d.usage = { ...d.usage, ...limits[plan] };
+    this.save(d);
+    App.toast('Plan changed to ' + plan + '!', 'success');
+    this.render();
+  },
+
+  showUpgrade() { document.querySelector('.pricing-grid').scrollIntoView({ behavior: 'smooth' }); },
+  cancelPlan() {
+    if (confirm('Cancel your plan? You\'ll be downgraded to the free Starter plan at the end of the billing period. This is a demo.')) {
+      App.toast('Plan cancellation scheduled. (Demo only)', 'warning');
+    }
+  }
+};
+document.addEventListener('DOMContentLoaded', () => Billing.init());
+</script>
+</body>
+</html>

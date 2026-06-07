@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chat Inbox – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-robot"></i><span>ChatBot AI</span></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="chat-inbox.html" class="active"><i class="fas fa-comments"></i> Chat Inbox</a>
+      <a href="tickets.html"><i class="fas fa-ticket"></i> Tickets</a>
+      <a href="knowledge-base.html"><i class="fas fa-book-open"></i> Knowledge Base</a>
+      <div class="sidebar-section">Configure</div>
+      <a href="bot-builder.html"><i class="fas fa-robot"></i> Bot Builder</a>
+      <a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a>
+      <a href="integrations.html"><i class="fas fa-plug"></i> Integrations</a>
+      <div class="sidebar-section">Admin</div>
+      <a href="team.html"><i class="fas fa-users"></i> Team</a>
+      <a href="settings.html"><i class="fas fa-gear"></i> Settings</a>
+      <a href="billing.html"><i class="fas fa-credit-card"></i> Billing</a>
+      <a href="help-center.html"><i class="fas fa-circle-question"></i> Help Center</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" data-user-avatar>AJ</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Alex Johnson</div>
+          <div class="sidebar-user-role" data-user-role>Administrator</div>
+        </div>
+      </div>
+      <a href="#" data-logout style="display:flex;align-items:center;gap:.5rem;padding:.5rem .875rem;color:#475569;font-size:.8rem;border-radius:var(--radius)" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-header">
+      <div class="app-header-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <span class="page-title">Chat Inbox</span>
+      </div>
+      <div class="app-header-right">
+        <select class="form-select" id="statusFilter" style="font-size:.8rem;padding:.375rem .75rem;width:auto">
+          <option value="">All Conversations</option>
+          <option value="open">Open</option>
+          <option value="resolved">Resolved</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="app-content" style="padding:1rem">
+      <div class="inbox-layout">
+        <!-- Conversation List -->
+        <div class="conversation-list">
+          <div class="conversation-list-header">
+            <div class="input-group">
+              <input type="text" class="form-control" id="convSearch" placeholder="Search conversations..." style="font-size:.8rem" />
+            </div>
+          </div>
+          <div id="convList" style="flex:1;overflow-y:auto"></div>
+        </div>
+
+        <!-- Chat Thread -->
+        <div class="chat-thread" id="chatThread">
+          <div class="empty-state">
+            <i class="fas fa-comments"></i>
+            <h3>Select a Conversation</h3>
+            <p>Choose a conversation from the list to view the full thread and reply.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Ticket from Chat Modal -->
+<div class="modal-overlay" id="ticketFromChatModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Create Ticket from Chat</h3>
+      <button class="modal-close"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <input type="text" class="form-control" id="chatTicketSubject" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <select class="form-select" id="chatTicketPriority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+          <option value="urgent">Urgent</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary modal-close">Cancel</button>
+      <button class="btn btn-primary" id="confirmTicketBtn">Create Ticket</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+const Inbox = {
+  state: { activeId: null, mode: 'reply' },
+
+  init() {
+    if (!Auth.guard()) return;
+    App.init();
+    this.renderList();
+    this.bindEvents();
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if (id) this.openConversation(id);
+  },
+
+  getConvs() { return CB.get(CB.KEYS.conversations) || []; },
+  saveConvs(c) { CB.set(CB.KEYS.conversations, c); },
+
+  filtered() {
+    const status = document.getElementById('statusFilter')?.value;
+    const search = document.getElementById('convSearch')?.value?.toLowerCase();
+    return this.getConvs().filter(c => {
+      if (status && c.status !== status) return false;
+      if (search && !c.customerName.toLowerCase().includes(search) && !c.lastMessage.toLowerCase().includes(search)) return false;
+      return true;
+    });
+  },
+
+  renderList() {
+    const el = document.getElementById('convList');
+    if (!el) return;
+    const convs = this.filtered();
+    if (!convs.length) {
+      el.innerHTML = '<div class="empty-state" style="height:200px;padding:1.5rem"><i class="fas fa-inbox"></i><p>No conversations</p></div>';
+      return;
+    }
+    const colors = ['#6366f1','#8b5cf6','#10b981','#f59e0b','#3b82f6','#ef4444'];
+    const channelIcon = { web: '🌐', messenger: '💬', whatsapp: '📱', slack: '🔴', email: '📧' };
+    el.innerHTML = convs.sort((a,b)=>new Date(b.startedAt)-new Date(a.startedAt)).map(c => {
+      const colorIdx = c.customerName.charCodeAt(0) % colors.length;
+      return `<div class="conversation-item ${c.id === this.state.activeId ? 'active' : ''} ${c.unread ? 'unread' : ''}"
+        onclick="Inbox.openConversation('${c.id}')">
+        <div class="avatar avatar-sm" style="background:${colors[colorIdx]};color:#fff">${c.customerName[0]}</div>
+        <div class="conv-info">
+          <div class="conv-name">
+            <span>${App.escHtml(c.customerName)}</span>
+            <span class="conv-time">${App.timeAgo(c.startedAt)}</span>
+          </div>
+          <div class="conv-preview">${channelIcon[c.channel]||'💬'} ${App.escHtml(c.lastMessage)}</div>
+          <div style="margin-top:.25rem">${App.getStatusBadge(c.status)}</div>
+        </div>
+        ${c.unread ? '<div class="conv-unread-dot"></div>' : ''}
+      </div>`;
+    }).join('');
+  },
+
+  openConversation(id) {
+    const convs = this.getConvs();
+    const conv = convs.find(c => c.id === id);
+    if (!conv) return;
+    this.state.activeId = id;
+
+    if (conv.unread) {
+      conv.unread = false;
+      this.saveConvs(convs);
+    }
+    this.renderList();
+    this.renderThread(conv);
+    document.querySelector('.chat-thread')?.classList.add('mobile-show');
+  },
+
+  renderThread(conv) {
+    const team = CB.get(CB.KEYS.team) || [];
+    const agent = team.find(t => t.id === conv.assignedTo);
+    const thread = document.getElementById('chatThread');
+    if (!thread) return;
+
+    thread.innerHTML = `
+      <div class="chat-thread-header">
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <button class="btn btn-ghost btn-sm" onclick="document.querySelector('.chat-thread').classList.remove('mobile-show')" style="display:none" id="backBtn"><i class="fas fa-arrow-left"></i></button>
+          <div class="avatar">${conv.customerName[0]}</div>
+          <div>
+            <div style="font-weight:700">${App.escHtml(conv.customerName)}</div>
+            <div class="text-xs text-muted">${App.escHtml(conv.customerEmail)} · ${App.escHtml(conv.channel)}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          ${App.getStatusBadge(conv.status)}
+          <select class="form-select" style="font-size:.75rem;padding:.25rem .5rem;width:auto" onchange="Inbox.assignAgent('${conv.id}',this.value)">
+            <option value="">Unassigned</option>
+            ${team.filter(m=>['admin','agent'].includes(m.role)).map(m=>`<option value="${m.id}" ${m.id===conv.assignedTo?'selected':''}>${App.escHtml(m.name)}</option>`).join('')}
+          </select>
+          ${conv.status==='open'
+            ? `<button class="btn btn-sm btn-success" onclick="Inbox.resolve('${conv.id}')"><i class="fas fa-check"></i> Resolve</button>`
+            : `<button class="btn btn-sm btn-secondary" onclick="Inbox.reopen('${conv.id}')"><i class="fas fa-rotate-left"></i> Reopen</button>`}
+          <button class="btn btn-sm btn-secondary" onclick="Inbox.openTicketModal('${conv.id}')"><i class="fas fa-ticket"></i></button>
+        </div>
+      </div>
+      <div class="chat-tabs">
+        <button class="tab-btn active" data-tab="msgTab" onclick="Inbox.setMode('reply',this)">Reply</button>
+        <button class="tab-btn" data-tab="noteTab" onclick="Inbox.setMode('note',this)">Internal Note</button>
+      </div>
+      <div class="chat-messages" id="threadMessages"></div>
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <textarea id="replyInput" placeholder="${conv.status==='open'?'Type your reply...':'Conversation resolved. Reopen to reply.'}"
+            ${conv.status!=='open'?'disabled':''} rows="2"></textarea>
+          <button class="btn btn-primary" id="sendReplyBtn" onclick="Inbox.sendReply('${conv.id}')" ${conv.status!=='open'?'disabled':''}>
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>`;
+
+    const msgs = document.getElementById('threadMessages');
+    (conv.messages || []).forEach(m => {
+      const el = document.createElement('div');
+      let cls = 'chat-message ';
+      if (m.type === 'outbound') cls += 'outbound';
+      else if (m.type === 'internal') cls += 'inbound internal';
+      else cls += 'inbound';
+      const agentMsg = m.sender === 'agent' ? ` · ${App.escHtml(m.agentName || 'Agent')}` : '';
+      const senderLabel = m.sender === 'bot' ? 'AI Bot' : m.sender === 'agent' ? (m.agentName || 'Agent') : conv.customerName;
+      el.className = cls;
+      el.innerHTML = `
+        ${m.type !== 'outbound' ? `<div class="avatar avatar-sm" style="background:${m.sender==='bot'?'var(--primary)':'#6b7280'};color:#fff">${m.sender==='bot'?'🤖':senderLabel[0]}</div>` : ''}
+        <div>
+          <div class="message-bubble">${App.escHtml(m.text)}</div>
+          <div class="msg-time">${App.escHtml(senderLabel)} · ${App.formatTime(m.time)}</div>
+        </div>`;
+      msgs.appendChild(el);
+    });
+    msgs.scrollTop = msgs.scrollHeight;
+
+    document.getElementById('replyInput')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); Inbox.sendReply(conv.id); }
+    });
+  },
+
+  setMode(mode, btn) {
+    this.state.mode = mode;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const input = document.getElementById('replyInput');
+    if (input) input.placeholder = mode === 'note' ? 'Add internal note (not visible to customer)...' : 'Type your reply...';
+  },
+
+  sendReply(id) {
+    const input = document.getElementById('replyInput');
+    const text = input?.value?.trim();
+    if (!text) return;
+    const convs = this.getConvs();
+    const idx = convs.findIndex(c => c.id === id);
+    if (idx < 0) return;
+    const user = Auth.getUser();
+    const isNote = this.state.mode === 'note';
+    const msg = {
+      id: App.generateId('m'),
+      sender: 'agent',
+      text,
+      time: new Date().toISOString(),
+      type: isNote ? 'internal' : 'outbound',
+      agentName: user?.name
+    };
+    if (!convs[idx].messages) convs[idx].messages = [];
+    convs[idx].messages.push(msg);
+    convs[idx].lastMessage = isNote ? '[Internal Note]' : text;
+    this.saveConvs(convs);
+    input.value = '';
+    this.renderThread(convs[idx]);
+    App.toast(isNote ? 'Note added' : 'Reply sent', 'success');
+  },
+
+  resolve(id) {
+    const convs = this.getConvs();
+    const idx = convs.findIndex(c => c.id === id);
+    if (idx >= 0) { convs[idx].status = 'resolved'; this.saveConvs(convs); this.renderList(); this.renderThread(convs[idx]); App.toast('Conversation resolved', 'success'); }
+  },
+
+  reopen(id) {
+    const convs = this.getConvs();
+    const idx = convs.findIndex(c => c.id === id);
+    if (idx >= 0) { convs[idx].status = 'open'; this.saveConvs(convs); this.renderList(); this.renderThread(convs[idx]); App.toast('Conversation reopened', 'success'); }
+  },
+
+  assignAgent(id, agentId) {
+    const convs = this.getConvs();
+    const idx = convs.findIndex(c => c.id === id);
+    if (idx >= 0) { convs[idx].assignedTo = agentId || null; this.saveConvs(convs); App.toast('Agent assigned', 'success'); }
+  },
+
+  openTicketModal(convId) {
+    const conv = this.getConvs().find(c => c.id === convId);
+    if (!conv) return;
+    document.getElementById('chatTicketSubject').value = `Support request from ${conv.customerName}`;
+    App.openModal('ticketFromChatModal');
+    document.getElementById('confirmTicketBtn').onclick = () => {
+      const tickets = CB.get(CB.KEYS.tickets) || [];
+      const lastNo = tickets.length ? parseInt(tickets.sort((a,b)=>a.ticketNo.localeCompare(b.ticketNo)).at(-1).ticketNo.split('-')[1]) : 0;
+      tickets.push({
+        id: App.generateId('t'),
+        ticketNo: `TKT-${String(lastNo + 1).padStart(3, '0')}`,
+        subject: document.getElementById('chatTicketSubject').value,
+        customerName: conv.customerName, customerEmail: conv.customerEmail,
+        status: 'open', priority: document.getElementById('chatTicketPriority').value,
+        category: 'General', assignedTo: conv.assignedTo,
+        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+        description: 'Created from chat conversation', conversationId: convId, notes: [],
+      });
+      CB.set(CB.KEYS.tickets, tickets);
+      App.closeModal('ticketFromChatModal');
+      App.toast('Ticket created from conversation!', 'success');
+    };
+  },
+
+  bindEvents() {
+    document.getElementById('statusFilter')?.addEventListener('change', () => this.renderList());
+    document.getElementById('convSearch')?.addEventListener('input', () => this.renderList());
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => Inbox.init());
+</script>
+</body>
+</html>

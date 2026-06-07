@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Integrations – ChatBot AI</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-robot"></i><span>ChatBot AI</span></div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <a href="chat-inbox.html"><i class="fas fa-comments"></i> Chat Inbox</a>
+      <a href="tickets.html"><i class="fas fa-ticket"></i> Tickets</a>
+      <a href="knowledge-base.html"><i class="fas fa-book-open"></i> Knowledge Base</a>
+      <div class="sidebar-section">Configure</div>
+      <a href="bot-builder.html"><i class="fas fa-robot"></i> Bot Builder</a>
+      <a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a>
+      <a href="integrations.html" class="active"><i class="fas fa-plug"></i> Integrations</a>
+      <div class="sidebar-section">Admin</div>
+      <a href="team.html"><i class="fas fa-users"></i> Team</a>
+      <a href="settings.html"><i class="fas fa-gear"></i> Settings</a>
+      <a href="billing.html"><i class="fas fa-credit-card"></i> Billing</a>
+      <a href="help-center.html"><i class="fas fa-circle-question"></i> Help Center</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" data-user-avatar>AJ</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Alex Johnson</div>
+          <div class="sidebar-user-role" data-user-role>Administrator</div>
+        </div>
+      </div>
+      <a href="#" data-logout style="display:flex;align-items:center;gap:.5rem;padding:.5rem .875rem;color:#475569;font-size:.8rem;border-radius:var(--radius)" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-header">
+      <div class="app-header-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <span class="page-title">Integrations</span>
+      </div>
+    </header>
+
+    <div class="app-content">
+      <div class="page-header">
+        <h1>Integrations</h1>
+        <p>Connect your favorite tools and channels to ChatBot AI.</p>
+      </div>
+
+      <!-- Stats -->
+      <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+        <div class="stat-card" style="flex:1;min-width:160px">
+          <div class="stat-card-header"><div><div class="stat-value" id="intConnected">—</div><div class="stat-label">Connected</div></div><div class="stat-icon green"><i class="fas fa-check-circle"></i></div></div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:160px">
+          <div class="stat-card-header"><div><div class="stat-value" id="intAvailable">—</div><div class="stat-label">Available</div></div><div class="stat-icon purple"><i class="fas fa-plug"></i></div></div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:160px">
+          <div class="stat-card-header"><div><div class="stat-value">24/7</div><div class="stat-label">Sync Status</div></div><div class="stat-icon blue"><i class="fas fa-sync"></i></div></div>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div style="margin-bottom:1.25rem;position:relative;max-width:360px">
+        <i class="fas fa-search" style="position:absolute;left:.875rem;top:50%;transform:translateY(-50%);color:var(--text-muted)"></i>
+        <input type="text" id="intSearch" class="form-control" placeholder="Search integrations..." style="padding-left:2.5rem" />
+      </div>
+
+      <!-- Integration Cards -->
+      <div class="grid-auto" id="intGrid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Config Modal -->
+<div class="modal-overlay" id="intConfigModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="intConfigTitle">Configure Integration</h3>
+      <button class="modal-close"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-info">This is a demo integration. In production, this would redirect to the service's OAuth flow or ask for API credentials.</div>
+      <div id="intConfigBody"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary modal-close">Cancel</button>
+      <button class="btn btn-primary" id="intSaveBtn">Connect</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+const Integrations = {
+  state: { configId: null },
+
+  init() {
+    if (!Auth.guard()) return;
+    App.init();
+    this.render();
+    document.getElementById('intSearch')?.addEventListener('input', () => this.render());
+    document.getElementById('intSaveBtn')?.addEventListener('click', () => this.saveConfig());
+  },
+
+  getData() { return CB.get(CB.KEYS.integrations) || CB.DEMO.integrations; },
+  save(d) { CB.set(CB.KEYS.integrations, d); },
+
+  filtered() {
+    const q = document.getElementById('intSearch')?.value?.toLowerCase();
+    const d = this.getData();
+    return q ? d.filter(i => i.name.toLowerCase().includes(q) || i.description.toLowerCase().includes(q)) : d;
+  },
+
+  render() {
+    const data = this.getData();
+    const connected = data.filter(i => i.connected).length;
+    document.getElementById('intConnected').textContent = connected;
+    document.getElementById('intAvailable').textContent = data.length;
+
+    const el = document.getElementById('intGrid');
+    if (!el) return;
+    el.innerHTML = this.filtered().map(intg => `
+      <div class="integration-card">
+        <div>
+          <div class="integration-logo" style="background:${intg.color}20;font-size:2rem">${intg.icon}</div>
+          <div class="integration-name">${App.escHtml(intg.name)}</div>
+          <div class="integration-desc">${App.escHtml(intg.description)}</div>
+        </div>
+        <div>
+          <div class="toggle-wrap mb-2">
+            <label class="toggle">
+              <input type="checkbox" ${intg.connected ? 'checked' : ''} onchange="Integrations.toggle('${intg.id}',this.checked)" />
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="text-sm ${intg.connected ? 'text-success' : 'text-muted'}">${intg.connected ? 'Connected' : 'Disconnected'}</span>
+          </div>
+          ${intg.connected
+            ? `<button class="btn btn-sm btn-secondary w-full" onclick="Integrations.openConfig('${intg.id}')"><i class="fas fa-gear"></i> Configure</button>`
+            : `<button class="btn btn-sm btn-primary w-full" onclick="Integrations.toggle('${intg.id}',true)"><i class="fas fa-plug"></i> Connect</button>`}
+        </div>
+      </div>`).join('');
+  },
+
+  toggle(id, state) {
+    const data = this.getData();
+    const idx = data.findIndex(i => i.id === id);
+    if (idx < 0) return;
+    data[idx].connected = state;
+    this.save(data);
+    App.toast(state ? `${data[idx].name} connected!` : `${data[idx].name} disconnected`, state ? 'success' : 'info');
+    this.render();
+  },
+
+  openConfig(id) {
+    const data = this.getData();
+    const intg = data.find(i => i.id === id);
+    if (!intg) return;
+    this.state.configId = id;
+    document.getElementById('intConfigTitle').textContent = 'Configure ' + intg.name;
+    document.getElementById('intConfigBody').innerHTML = `
+      <div class="form-group">
+        <label class="form-label">Webhook URL</label>
+        <input type="text" class="form-control" value="https://chatbotai.io/webhook/${id}" readonly />
+        <div class="form-hint">Add this URL to your ${intg.name} settings.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">API Key</label>
+        <input type="text" class="form-control" placeholder="Enter your ${intg.name} API key" />
+      </div>`;
+    App.openModal('intConfigModal');
+  },
+
+  saveConfig() {
+    App.toast('Integration configured!', 'success');
+    App.closeModal('intConfigModal');
+  }
+};
+document.addEventListener('DOMContentLoaded', () => Integrations.init());
+</script>
+</body>
+</html>
